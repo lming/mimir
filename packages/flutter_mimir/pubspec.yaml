@@ -6,6 +6,7 @@ version: 0.0.2+1
 homepage: https://github.com/GregoryConrad/mimir
 repository: https://github.com/GregoryConrad/mimir
 issue_tracker: https://github.com/GregoryConrad/mimir/issues
+publish_to: none
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -15,7 +16,9 @@ dependencies:
   flutter:
     sdk: flutter
   meta: ^1.9.1
-  mimir: ^0.0.2+1
+  #mimir: ^0.0.2+1
+  mimir:
+    path: ../mimir
   path: ^1.8.3
   path_provider: ^2.0.15
 
