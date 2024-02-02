@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mimir/flutter_mimir.dart';
 import 'package:flutter_rearch/flutter_rearch.dart';
+// ignore: implementation_imports
+import 'package:mimir/src/bridge_generated.dart';
 import 'package:rearch/rearch.dart';
 
 void main() => runApp(const DemoApp());
@@ -46,6 +48,16 @@ AsyncValue<List<Map<String, dynamic>>> searchResultsCapsule(CapsuleHandle use) {
   final index = use(indexCapsule);
   final query = use(queryCapsule);
 
+  index
+      .fancySearch(Query(
+          query: query.$1,
+          attributesToHighlight: ['overview'],
+          attributesToCrop: ['overview']))
+      .then((res) {
+    for (final r in res) {
+      print('doc: ${r['formatted'].toString()}');
+    }
+  });
   // When query is null/empty, all docs will be returned.
   final stream = use.memo(
     () => index.searchStream(query: query.$1),

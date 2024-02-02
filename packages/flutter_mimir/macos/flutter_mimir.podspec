@@ -5,19 +5,31 @@ release_tag_name = 'mimir-v0.0.2+1' # generated; do not edit
 framework_name = 'EmbeddedMilli.xcframework'
 remote_zip_name = "#{framework_name}.zip"
 url = "https://github.com/GregoryConrad/mimir/releases/download/#{release_tag_name}/#{remote_zip_name}"
+#url = "file:///Users/ming/tmp/EmbeddedMilli.xcframework.zip"
 local_zip_name = "#{release_tag_name}.zip"
+
 `
+pushd ../../../
+cargo build -r
+bash scripts/build-apple.sh
+popd
+
 cd Frameworks
-rm -rf #{framework_name}
-
-if [ ! -f #{local_zip_name} ]
-then
-  curl -L #{url} -o #{local_zip_name}
-fi
-
-unzip #{local_zip_name}
-cd -
+ln -sf ../../../../platform-build/#{framework_name} .
 `
+
+#`
+#cd Frameworks
+#rm -rf #{framework_name}
+#
+#if [ ! -f #{local_zip_name} ]
+#then
+#  curl -L #{url} -o #{local_zip_name}
+#fi
+#
+#unzip #{local_zip_name}
+#cd -
+#`
 
 Pod::Spec.new do |spec|
   spec.name          = 'flutter_mimir'
