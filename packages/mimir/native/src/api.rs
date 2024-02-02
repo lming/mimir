@@ -83,6 +83,50 @@ pub struct MimirIndexSettings {
     pub disallow_typos_on_fields: Vec<String>,
 }
 
+pub enum MatchingStrategy {
+    /// Remove query words from last to first
+    Last,
+    /// All query words are mandatory
+    All,
+}
+
+#[frb(dart_metadata=("freezed"))]
+pub struct Query {
+    pub query: String,
+    //pub vector: Option<Vec<f32>>,
+    pub offset: Option<usize>,
+    pub limit: Option<usize>,
+    //pub page: Option<usize>,
+    //pub hits_per_page: Option<usize>,
+    pub attributes_to_retrieve: Option<Vec<String>>,
+    pub attributes_to_crop: Option<Vec<String>>,
+    pub crop_length: Option<usize>,
+    pub attributes_to_highlight: Option<Vec<String>>,
+
+    // not implemented
+    pub show_matches_position: Option<bool>,
+    // not implemented
+    pub show_ranking_score: Option<bool>,
+    // not implemented
+    pub show_ranking_score_details: Option<bool>,
+
+    //pub filter: Option<Value>,
+    pub filter: Option<String>,
+    pub sort: Option<Vec<String>>,
+
+    // not tested
+    pub facets: Option<Vec<String>>,
+
+    pub highlight_pre_tag: Option<String>,
+    pub highlight_post_tag: Option<String>,
+    pub crop_marker: Option<String>,
+
+    // not tested
+    pub matching_strategy: Option<MatchingStrategy>,
+    //pub matching_strategy: TermsMatchingStrategy,
+    pub attributes_to_search_on: Option<Vec<String>>,
+}
+
 /// Ensures an instance of milli (represented by just a directory) is initialized
 ///
 /// `tmp_dir`, if specified, is the directory used to store all temporary files
@@ -153,6 +197,15 @@ pub fn get_document(
 /// Returns all documents stored in the index.
 pub fn get_all_documents(instance_dir: String, index_name: String) -> Result<Vec<String>> {
     embedded_milli::get_all_documents(instance_dir.as_str(), index_name.as_str())?
+        .iter()
+        .map(DocumentExt::to_string)
+        .collect()
+}
+
+/// Performs a search against the index and returns the documents found
+#[allow(clippy::too_many_arguments)]
+pub fn fancy_search(instance_dir: String, index_name: String, q: Query) -> Result<Vec<String>> {
+    embedded_milli::fancy_search(instance_dir.as_str(), index_name.as_str(), q)?
         .iter()
         .map(DocumentExt::to_string)
         .collect()

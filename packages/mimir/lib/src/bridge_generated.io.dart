@@ -32,6 +32,11 @@ class EmbeddedMilliPlatform extends FlutterRustBridgeBase<EmbeddedMilliWire> {
   }
 
   @protected
+  ffi.Pointer<ffi.Bool> api2wire_box_autoadd_bool(bool raw) {
+    return inner.new_box_autoadd_bool_0(api2wire_bool(raw));
+  }
+
+  @protected
   ffi.Pointer<wire_Filter> api2wire_box_autoadd_filter(Filter raw) {
     final ptr = inner.new_box_autoadd_filter_0();
     _api_fill_to_wire_filter(raw, ptr.ref);
@@ -39,10 +44,24 @@ class EmbeddedMilliPlatform extends FlutterRustBridgeBase<EmbeddedMilliWire> {
   }
 
   @protected
+  ffi.Pointer<ffi.Int32> api2wire_box_autoadd_matching_strategy(
+      MatchingStrategy raw) {
+    return inner
+        .new_box_autoadd_matching_strategy_0(api2wire_matching_strategy(raw));
+  }
+
+  @protected
   ffi.Pointer<wire_MimirIndexSettings>
       api2wire_box_autoadd_mimir_index_settings(MimirIndexSettings raw) {
     final ptr = inner.new_box_autoadd_mimir_index_settings_0();
     _api_fill_to_wire_mimir_index_settings(raw, ptr.ref);
+    return ptr;
+  }
+
+  @protected
+  ffi.Pointer<wire_Query> api2wire_box_autoadd_query(Query raw) {
+    final ptr = inner.new_box_autoadd_query_0();
+    _api_fill_to_wire_query(raw, ptr.ref);
     return ptr;
   }
 
@@ -56,6 +75,11 @@ class EmbeddedMilliPlatform extends FlutterRustBridgeBase<EmbeddedMilliWire> {
   @protected
   ffi.Pointer<ffi.Uint32> api2wire_box_autoadd_u32(int raw) {
     return inner.new_box_autoadd_u32_0(api2wire_u32(raw));
+  }
+
+  @protected
+  ffi.Pointer<ffi.UintPtr> api2wire_box_autoadd_usize(int raw) {
+    return inner.new_box_autoadd_usize_0(api2wire_usize(raw));
   }
 
   @protected
@@ -103,8 +127,21 @@ class EmbeddedMilliPlatform extends FlutterRustBridgeBase<EmbeddedMilliWire> {
   }
 
   @protected
+  ffi.Pointer<ffi.Bool> api2wire_opt_box_autoadd_bool(bool? raw) {
+    return raw == null ? ffi.nullptr : api2wire_box_autoadd_bool(raw);
+  }
+
+  @protected
   ffi.Pointer<wire_Filter> api2wire_opt_box_autoadd_filter(Filter? raw) {
     return raw == null ? ffi.nullptr : api2wire_box_autoadd_filter(raw);
+  }
+
+  @protected
+  ffi.Pointer<ffi.Int32> api2wire_opt_box_autoadd_matching_strategy(
+      MatchingStrategy? raw) {
+    return raw == null
+        ? ffi.nullptr
+        : api2wire_box_autoadd_matching_strategy(raw);
   }
 
   @protected
@@ -121,6 +158,11 @@ class EmbeddedMilliPlatform extends FlutterRustBridgeBase<EmbeddedMilliWire> {
   }
 
   @protected
+  ffi.Pointer<ffi.UintPtr> api2wire_opt_box_autoadd_usize(int? raw) {
+    return raw == null ? ffi.nullptr : api2wire_box_autoadd_usize(raw);
+  }
+
+  @protected
   ffi.Pointer<wire_list_sort_by> api2wire_opt_list_sort_by(List<SortBy>? raw) {
     return raw == null ? ffi.nullptr : api2wire_list_sort_by(raw);
   }
@@ -131,6 +173,7 @@ class EmbeddedMilliPlatform extends FlutterRustBridgeBase<EmbeddedMilliWire> {
     ans.ref.ptr.asTypedList(raw.length).setAll(0, raw);
     return ans;
   }
+
 // Section: finalizer
 
 // Section: api_fill_to_wire
@@ -143,6 +186,11 @@ class EmbeddedMilliPlatform extends FlutterRustBridgeBase<EmbeddedMilliWire> {
   void _api_fill_to_wire_box_autoadd_mimir_index_settings(
       MimirIndexSettings apiObj, ffi.Pointer<wire_MimirIndexSettings> wireObj) {
     _api_fill_to_wire_mimir_index_settings(apiObj, wireObj.ref);
+  }
+
+  void _api_fill_to_wire_box_autoadd_query(
+      Query apiObj, ffi.Pointer<wire_Query> wireObj) {
+    _api_fill_to_wire_query(apiObj, wireObj.ref);
   }
 
   void _api_fill_to_wire_box_filter(
@@ -288,6 +336,35 @@ class EmbeddedMilliPlatform extends FlutterRustBridgeBase<EmbeddedMilliWire> {
         api2wire_StringList(apiObj.disallowTyposOnWords);
     wireObj.disallow_typos_on_fields =
         api2wire_StringList(apiObj.disallowTyposOnFields);
+  }
+
+  void _api_fill_to_wire_query(Query apiObj, wire_Query wireObj) {
+    wireObj.query = api2wire_String(apiObj.query);
+    wireObj.offset = api2wire_opt_box_autoadd_usize(apiObj.offset);
+    wireObj.limit = api2wire_opt_box_autoadd_usize(apiObj.limit);
+    wireObj.attributes_to_retrieve =
+        api2wire_opt_StringList(apiObj.attributesToRetrieve);
+    wireObj.attributes_to_crop =
+        api2wire_opt_StringList(apiObj.attributesToCrop);
+    wireObj.crop_length = api2wire_opt_box_autoadd_usize(apiObj.cropLength);
+    wireObj.attributes_to_highlight =
+        api2wire_opt_StringList(apiObj.attributesToHighlight);
+    wireObj.show_matches_position =
+        api2wire_opt_box_autoadd_bool(apiObj.showMatchesPosition);
+    wireObj.show_ranking_score =
+        api2wire_opt_box_autoadd_bool(apiObj.showRankingScore);
+    wireObj.show_ranking_score_details =
+        api2wire_opt_box_autoadd_bool(apiObj.showRankingScoreDetails);
+    wireObj.filter = api2wire_opt_String(apiObj.filter);
+    wireObj.sort = api2wire_opt_StringList(apiObj.sort);
+    wireObj.facets = api2wire_opt_StringList(apiObj.facets);
+    wireObj.highlight_pre_tag = api2wire_opt_String(apiObj.highlightPreTag);
+    wireObj.highlight_post_tag = api2wire_opt_String(apiObj.highlightPostTag);
+    wireObj.crop_marker = api2wire_opt_String(apiObj.cropMarker);
+    wireObj.matching_strategy =
+        api2wire_opt_box_autoadd_matching_strategy(apiObj.matchingStrategy);
+    wireObj.attributes_to_search_on =
+        api2wire_opt_StringList(apiObj.attributesToSearchOn);
   }
 
   void _api_fill_to_wire_sort_by(SortBy apiObj, wire_SortBy wireObj) {
@@ -593,6 +670,31 @@ class EmbeddedMilliWire implements FlutterRustBridgeWireBase {
       void Function(
           int, ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_uint_8_list>)>();
 
+  void wire_fancy_search(
+    int port_,
+    ffi.Pointer<wire_uint_8_list> instance_dir,
+    ffi.Pointer<wire_uint_8_list> index_name,
+    ffi.Pointer<wire_Query> q,
+  ) {
+    return _wire_fancy_search(
+      port_,
+      instance_dir,
+      index_name,
+      q,
+    );
+  }
+
+  late final _wire_fancy_searchPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_uint_8_list>,
+              ffi.Pointer<wire_Query>)>>('wire_fancy_search');
+  late final _wire_fancy_search = _wire_fancy_searchPtr.asFunction<
+      void Function(int, ffi.Pointer<wire_uint_8_list>,
+          ffi.Pointer<wire_uint_8_list>, ffi.Pointer<wire_Query>)>();
+
   void wire_search_documents(
     int port_,
     ffi.Pointer<wire_uint_8_list> instance_dir,
@@ -724,6 +826,20 @@ class EmbeddedMilliWire implements FlutterRustBridgeWireBase {
   late final _new_StringList_0 = _new_StringList_0Ptr
       .asFunction<ffi.Pointer<wire_StringList> Function(int)>();
 
+  ffi.Pointer<ffi.Bool> new_box_autoadd_bool_0(
+    bool value,
+  ) {
+    return _new_box_autoadd_bool_0(
+      value,
+    );
+  }
+
+  late final _new_box_autoadd_bool_0Ptr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Bool> Function(ffi.Bool)>>(
+          'new_box_autoadd_bool_0');
+  late final _new_box_autoadd_bool_0 = _new_box_autoadd_bool_0Ptr
+      .asFunction<ffi.Pointer<ffi.Bool> Function(bool)>();
+
   ffi.Pointer<wire_Filter> new_box_autoadd_filter_0() {
     return _new_box_autoadd_filter_0();
   }
@@ -733,6 +849,21 @@ class EmbeddedMilliWire implements FlutterRustBridgeWireBase {
           'new_box_autoadd_filter_0');
   late final _new_box_autoadd_filter_0 = _new_box_autoadd_filter_0Ptr
       .asFunction<ffi.Pointer<wire_Filter> Function()>();
+
+  ffi.Pointer<ffi.Int32> new_box_autoadd_matching_strategy_0(
+    int value,
+  ) {
+    return _new_box_autoadd_matching_strategy_0(
+      value,
+    );
+  }
+
+  late final _new_box_autoadd_matching_strategy_0Ptr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Int32> Function(ffi.Int32)>>(
+          'new_box_autoadd_matching_strategy_0');
+  late final _new_box_autoadd_matching_strategy_0 =
+      _new_box_autoadd_matching_strategy_0Ptr
+          .asFunction<ffi.Pointer<ffi.Int32> Function(int)>();
 
   ffi.Pointer<wire_MimirIndexSettings>
       new_box_autoadd_mimir_index_settings_0() {
@@ -745,6 +876,16 @@ class EmbeddedMilliWire implements FlutterRustBridgeWireBase {
   late final _new_box_autoadd_mimir_index_settings_0 =
       _new_box_autoadd_mimir_index_settings_0Ptr
           .asFunction<ffi.Pointer<wire_MimirIndexSettings> Function()>();
+
+  ffi.Pointer<wire_Query> new_box_autoadd_query_0() {
+    return _new_box_autoadd_query_0();
+  }
+
+  late final _new_box_autoadd_query_0Ptr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<wire_Query> Function()>>(
+          'new_box_autoadd_query_0');
+  late final _new_box_autoadd_query_0 = _new_box_autoadd_query_0Ptr
+      .asFunction<ffi.Pointer<wire_Query> Function()>();
 
   ffi.Pointer<ffi.Int32> new_box_autoadd_terms_matching_strategy_0(
     int value,
@@ -774,6 +915,20 @@ class EmbeddedMilliWire implements FlutterRustBridgeWireBase {
           'new_box_autoadd_u32_0');
   late final _new_box_autoadd_u32_0 = _new_box_autoadd_u32_0Ptr
       .asFunction<ffi.Pointer<ffi.Uint32> Function(int)>();
+
+  ffi.Pointer<ffi.UintPtr> new_box_autoadd_usize_0(
+    int value,
+  ) {
+    return _new_box_autoadd_usize_0(
+      value,
+    );
+  }
+
+  late final _new_box_autoadd_usize_0Ptr = _lookup<
+          ffi.NativeFunction<ffi.Pointer<ffi.UintPtr> Function(ffi.UintPtr)>>(
+      'new_box_autoadd_usize_0');
+  late final _new_box_autoadd_usize_0 = _new_box_autoadd_usize_0Ptr
+      .asFunction<ffi.Pointer<ffi.UintPtr> Function(int)>();
 
   ffi.Pointer<wire_Filter> new_box_filter_0() {
     return _new_box_filter_0();
@@ -1036,6 +1191,44 @@ final class wire_StringList extends ffi.Struct {
 
   @ffi.Int32()
   external int len;
+}
+
+final class wire_Query extends ffi.Struct {
+  external ffi.Pointer<wire_uint_8_list> query;
+
+  external ffi.Pointer<ffi.UintPtr> offset;
+
+  external ffi.Pointer<ffi.UintPtr> limit;
+
+  external ffi.Pointer<wire_StringList> attributes_to_retrieve;
+
+  external ffi.Pointer<wire_StringList> attributes_to_crop;
+
+  external ffi.Pointer<ffi.UintPtr> crop_length;
+
+  external ffi.Pointer<wire_StringList> attributes_to_highlight;
+
+  external ffi.Pointer<ffi.Bool> show_matches_position;
+
+  external ffi.Pointer<ffi.Bool> show_ranking_score;
+
+  external ffi.Pointer<ffi.Bool> show_ranking_score_details;
+
+  external ffi.Pointer<wire_uint_8_list> filter;
+
+  external ffi.Pointer<wire_StringList> sort;
+
+  external ffi.Pointer<wire_StringList> facets;
+
+  external ffi.Pointer<wire_uint_8_list> highlight_pre_tag;
+
+  external ffi.Pointer<wire_uint_8_list> highlight_post_tag;
+
+  external ffi.Pointer<wire_uint_8_list> crop_marker;
+
+  external ffi.Pointer<ffi.Int32> matching_strategy;
+
+  external ffi.Pointer<wire_StringList> attributes_to_search_on;
 }
 
 final class wire_SortBy_Asc extends ffi.Struct {

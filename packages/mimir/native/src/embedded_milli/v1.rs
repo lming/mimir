@@ -1,6 +1,14 @@
 use milli_v1 as milli;
 
-use std::{convert::TryInto, io::Cursor, path::Path, str::FromStr};
+use std::{
+    collections::{BTreeSet, HashSet},
+    convert::TryInto,
+    io::Cursor,
+    path::Path,
+    str::FromStr,
+};
+
+use serde_json::{from_str, Value};
 
 use anyhow::{anyhow, Result};
 use milli::{
@@ -8,7 +16,14 @@ use milli::{
     heed, update, AscDesc, Criterion, Index, Member, Search, SearchResult,
 };
 
-use crate::api::{Filter, MimirIndexSettings, SortBy, Synonyms, TermsMatchingStrategy};
+use index_scheduler::RoFeatures;
+use meilisearch::search::SearchResult as ExtSearchResult;
+use meilisearch::search::{perform_search, SearchQuery};
+use meilisearch_types::features::RuntimeTogglableFeatures;
+
+use crate::api::{
+    Filter, MatchingStrategy, MimirIndexSettings, Query, SortBy, Synonyms, TermsMatchingStrategy,
+};
 
 use super::{
     Document, Dump, MAP_EXP_BACKOFF_AMOUNT, MAP_SIZE_TRIES, MAX_OS_PAGE_SIZE, MAX_POSSIBLE_SIZE,
@@ -163,6 +178,64 @@ impl super::EmbeddedMilli<Index> for EmbeddedMilli {
             .map(|doc| milli::all_obkv_to_json(doc?.1, &fields_ids_map))
             .map(|r| r.map_err(anyhow::Error::from))
             .collect()
+    }
+
+    fn fancy_search(index: &Index, q: Query) -> Result<Vec<Document>> {
+        let attr_retrive: Option<BTreeSet<String>> = q
+            .attributes_to_retrieve
+            .map(|vec| vec.into_iter().collect::<BTreeSet<String>>());
+        let attr_hl: Option<HashSet<String>> = q
+            .attributes_to_highlight
+            .map(|vec| vec.into_iter().collect::<HashSet<String>>());
+        //let filter: milli::FilterCondition = q.filter.as_ref().unwrap().into();
+        let filter: Option<Value> = q.filter.and_then(|s| from_str(&s).ok());
+
+        let query = SearchQuery {
+            q: Some(q.query),
+            vector: None,
+            offset: q.offset.unwrap_or(0),
+            limit: q.limit.unwrap_or(10000),
+            page: None,
+            hits_per_page: None,
+            attributes_to_retrieve: attr_retrive,
+            attributes_to_crop: q.attributes_to_crop,
+            crop_length: q.crop_length.unwrap_or(10),
+            attributes_to_highlight: attr_hl,
+            show_matches_position: q.show_matches_position.unwrap_or(false),
+            show_ranking_score: q.show_ranking_score.unwrap_or(false),
+            show_ranking_score_details: q.show_ranking_score_details.unwrap_or(false),
+            filter: filter,
+            sort: q.sort,
+            facets: q.facets,
+            highlight_pre_tag: q.highlight_pre_tag.unwrap_or("<em>".to_string()),
+            highlight_post_tag: q.highlight_post_tag.unwrap_or("</em>".to_string()),
+            crop_marker: q.crop_marker.unwrap_or("...".to_string()),
+            matching_strategy: q.matching_strategy.unwrap_or(MatchingStrategy::Last).into(),
+            attributes_to_search_on: q.attributes_to_search_on,
+        };
+        let features = RoFeatures {
+            runtime: RuntimeTogglableFeatures {
+                score_details: false,
+                vector_store: false,
+                metrics: false,
+                export_puffin_reports: false,
+            },
+        };
+        let res = perform_search(index, query, features);
+        let search_result = res?;
+        let ExtSearchResult { hits, .. } = search_result;
+        let docs: Vec<Document> = hits
+            .into_iter()
+            .filter_map(|hit| {
+                let o = serde_json::json!({"document": hit.document, "formatted": hit.formatted});
+                if let serde_json::Value::Object(m) = o {
+                    Some(m)
+                } else {
+                    None
+                }
+            })
+            .collect();
+        Ok(docs)
     }
 
     fn search_documents(
@@ -360,6 +433,15 @@ impl super::EmbeddedMilli<Index> for EmbeddedMilli {
 
         index.prepare_for_closing().wait();
         import_status
+    }
+}
+
+impl From<MatchingStrategy> for meilisearch::search::MatchingStrategy {
+    fn from(strat: MatchingStrategy) -> Self {
+        match strat {
+            MatchingStrategy::Last => meilisearch::search::MatchingStrategy::Last,
+            MatchingStrategy::All => meilisearch::search::MatchingStrategy::All,
+        }
     }
 }
 

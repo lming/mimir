@@ -86,6 +86,15 @@ abstract class EmbeddedMilli {
   FlutterRustBridgeTaskConstMeta get kGetAllDocumentsConstMeta;
 
   /// Performs a search against the index and returns the documents found
+  Future<List<String>> fancySearch(
+      {required String instanceDir,
+      required String indexName,
+      required Query q,
+      dynamic hint});
+
+  FlutterRustBridgeTaskConstMeta get kFancySearchConstMeta;
+
+  /// Performs a search against the index and returns the documents found
   Future<List<String>> searchDocuments(
       {required String instanceDir,
       required String indexName,
@@ -202,6 +211,14 @@ class Filter with _$Filter {
   }) = Filter_IsEmpty;
 }
 
+enum MatchingStrategy {
+  /// Remove query words from last to first
+  Last,
+
+  /// All query words are mandatory
+  All,
+}
+
 /// The settings of a mimir index
 @freezed
 class MimirIndexSettings with _$MimirIndexSettings {
@@ -219,6 +236,30 @@ class MimirIndexSettings with _$MimirIndexSettings {
     required List<String> disallowTyposOnWords,
     required List<String> disallowTyposOnFields,
   }) = _MimirIndexSettings;
+}
+
+@freezed
+class Query with _$Query {
+  const factory Query({
+    required String query,
+    int? offset,
+    int? limit,
+    List<String>? attributesToRetrieve,
+    List<String>? attributesToCrop,
+    int? cropLength,
+    List<String>? attributesToHighlight,
+    bool? showMatchesPosition,
+    bool? showRankingScore,
+    bool? showRankingScoreDetails,
+    String? filter,
+    List<String>? sort,
+    List<String>? facets,
+    String? highlightPreTag,
+    String? highlightPostTag,
+    String? cropMarker,
+    MatchingStrategy? matchingStrategy,
+    List<String>? attributesToSearchOn,
+  }) = _Query;
 }
 
 @freezed
@@ -445,6 +486,31 @@ class EmbeddedMilliImpl implements EmbeddedMilli {
         argNames: ["instanceDir", "indexName"],
       );
 
+  Future<List<String>> fancySearch(
+      {required String instanceDir,
+      required String indexName,
+      required Query q,
+      dynamic hint}) {
+    var arg0 = _platform.api2wire_String(instanceDir);
+    var arg1 = _platform.api2wire_String(indexName);
+    var arg2 = _platform.api2wire_box_autoadd_query(q);
+    return _platform.executeNormal(FlutterRustBridgeTask(
+      callFfi: (port_) =>
+          _platform.inner.wire_fancy_search(port_, arg0, arg1, arg2),
+      parseSuccessData: _wire2api_StringList,
+      parseErrorData: _wire2api_FrbAnyhowException,
+      constMeta: kFancySearchConstMeta,
+      argValues: [instanceDir, indexName, q],
+      hint: hint,
+    ));
+  }
+
+  FlutterRustBridgeTaskConstMeta get kFancySearchConstMeta =>
+      const FlutterRustBridgeTaskConstMeta(
+        debugName: "fancy_search",
+        argNames: ["instanceDir", "indexName", "q"],
+      );
+
   Future<List<String>> searchDocuments(
       {required String instanceDir,
       required String indexName,
@@ -658,6 +724,11 @@ int api2wire_i32(int raw) {
 }
 
 @protected
+int api2wire_matching_strategy(MatchingStrategy raw) {
+  return api2wire_i32(raw.index);
+}
+
+@protected
 int api2wire_terms_matching_strategy(TermsMatchingStrategy raw) {
   return api2wire_i32(raw.index);
 }
@@ -672,4 +743,8 @@ int api2wire_u8(int raw) {
   return raw;
 }
 
+@protected
+int api2wire_usize(int raw) {
+  return raw;
+}
 // Section: finalizer

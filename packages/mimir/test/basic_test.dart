@@ -1,5 +1,6 @@
 import 'package:flutter_rust_bridge/flutter_rust_bridge.dart';
 import 'package:mimir/mimir.dart';
+import 'package:mimir/src/bridge_generated.dart';
 import 'package:test/test.dart';
 
 import 'utils.dart';
@@ -334,6 +335,7 @@ void main() {
     const docs = [
       {'id': 0, 'text': '你好妈妈'},
       {'id': 1, 'text': '这个饺子好吃'},
+      {'id': 3, 'text': '这是个很长的句子，来测试crop是否正确，所以需要较多的words来增加长度。'},
     ];
     await index.addDocuments(docs);
 
@@ -357,6 +359,44 @@ void main() {
       await index.search(query: '你好'),
       [docs[0]],
     );
+
+    {
+      expect(
+        await index.fancySearch(
+          const Query(query: '妈妈', attributesToHighlight: ['text']),
+        ),
+        [
+          {
+            'document': {'id': 0, 'text': '你好妈妈'},
+            'formatted': {'id': '0', 'text': '你好<em>妈妈</em>'}
+          }
+        ],
+      );
+    }
+
+    {
+      expect(
+        await index.fancySearch(
+          const Query(
+            query: '正确',
+            attributesToRetrieve: ['id'],
+            attributesToHighlight: ['text'],
+            attributesToCrop: ['text'],
+            cropLength: 6,
+            highlightPreTag: '<wow>',
+            highlightPostTag: '</wow>',
+          ),
+        ),
+        [
+          {
+            'document': {
+              'id': 3,
+            },
+            'formatted': {'id': '3', 'text': '...句子，来测试crop是否<wow>正确</wow>...'}
+          }
+        ],
+      );
+    }
   });
 
   test('Searching can be done with pagination', () async {
@@ -394,7 +434,8 @@ void main() {
       {'id': 1, 'field': null},
       {'id': 2, 'field': 1},
     ];
-    final index = await useTestIndex();
+    final index = await (await useInstance())
+        .openIndex('testFilter', filterableFields: ['field']);
     await index.addDocuments(docs);
     expect(
       await index.search(filter: Mimir.where('field', isNull: true)),
@@ -404,6 +445,68 @@ void main() {
       await index.search(filter: Mimir.where('field', isNull: false)),
       [docs[1]],
     );
+  });
+
+  test('fancy search with filters', () async {
+    final docs = [
+      {'id': 1, 'gain': null, 'act': 'tennis'},
+      {'id': 2, 'gain': 1, 'act': 'poker'},
+      {'id': 3, 'gain': -1, 'act': 'poker'},
+    ];
+    final index = await (await useInstance()).openIndex('testFilter',
+        filterableFields: ['gain', 'act'], sortableFields: ['gain']);
+    await index.addDocuments(docs);
+    {
+      expect(
+        await index
+            .fancySearch(const Query(query: '', filter: '"gain IS NULL"')),
+        [
+          {'document': docs[0], 'formatted': {}},
+        ],
+      );
+    }
+
+    {
+      expect(
+        await index
+            .fancySearch(const Query(query: '', filter: '"act = poker"')),
+        [
+          {'document': docs[1], 'formatted': {}},
+          {'document': docs[2], 'formatted': {}},
+        ],
+      );
+    }
+
+    {
+      expect(
+        await index.fancySearch(const Query(
+            query: '', filter: '"act = poker"', sort: ['gain:asc'])),
+        [
+          {'document': docs[2], 'formatted': {}},
+          {'document': docs[1], 'formatted': {}},
+        ],
+      );
+    }
+
+    {
+      expect(
+        await index.fancySearch(
+            const Query(query: '', filter: '"act = poker AND gain > 0"')),
+        [
+          {'document': docs[1], 'formatted': {}},
+        ],
+      );
+    }
+
+    {
+      expect(
+        await index.fancySearch(
+            const Query(query: '', filter: '["act = poker", "gain > 0"]')),
+        [
+          {'document': docs[1], 'formatted': {}},
+        ],
+      );
+    }
   });
 
   test('isEmpty filter returns only documents where field is empty', () async {

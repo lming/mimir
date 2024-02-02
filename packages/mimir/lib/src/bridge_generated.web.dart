@@ -31,14 +31,29 @@ class EmbeddedMilliPlatform extends FlutterRustBridgeBase<EmbeddedMilliWire>
   }
 
   @protected
+  bool api2wire_box_autoadd_bool(bool raw) {
+    return api2wire_bool(raw);
+  }
+
+  @protected
   List<dynamic> api2wire_box_autoadd_filter(Filter raw) {
     return api2wire_filter(raw);
+  }
+
+  @protected
+  int api2wire_box_autoadd_matching_strategy(MatchingStrategy raw) {
+    return api2wire_matching_strategy(raw);
   }
 
   @protected
   List<dynamic> api2wire_box_autoadd_mimir_index_settings(
       MimirIndexSettings raw) {
     return api2wire_mimir_index_settings(raw);
+  }
+
+  @protected
+  List<dynamic> api2wire_box_autoadd_query(Query raw) {
+    return api2wire_query(raw);
   }
 
   @protected
@@ -49,6 +64,11 @@ class EmbeddedMilliPlatform extends FlutterRustBridgeBase<EmbeddedMilliWire>
   @protected
   int api2wire_box_autoadd_u32(int raw) {
     return api2wire_u32(raw);
+  }
+
+  @protected
+  int api2wire_box_autoadd_usize(int raw) {
+    return api2wire_usize(raw);
   }
 
   @protected
@@ -153,8 +173,18 @@ class EmbeddedMilliPlatform extends FlutterRustBridgeBase<EmbeddedMilliWire>
   }
 
   @protected
+  bool? api2wire_opt_box_autoadd_bool(bool? raw) {
+    return raw == null ? null : api2wire_box_autoadd_bool(raw);
+  }
+
+  @protected
   List<dynamic>? api2wire_opt_box_autoadd_filter(Filter? raw) {
     return raw == null ? null : api2wire_box_autoadd_filter(raw);
+  }
+
+  @protected
+  int? api2wire_opt_box_autoadd_matching_strategy(MatchingStrategy? raw) {
+    return raw == null ? null : api2wire_box_autoadd_matching_strategy(raw);
   }
 
   @protected
@@ -171,8 +201,37 @@ class EmbeddedMilliPlatform extends FlutterRustBridgeBase<EmbeddedMilliWire>
   }
 
   @protected
+  int? api2wire_opt_box_autoadd_usize(int? raw) {
+    return raw == null ? null : api2wire_box_autoadd_usize(raw);
+  }
+
+  @protected
   List<dynamic>? api2wire_opt_list_sort_by(List<SortBy>? raw) {
     return raw == null ? null : api2wire_list_sort_by(raw);
+  }
+
+  @protected
+  List<dynamic> api2wire_query(Query raw) {
+    return [
+      api2wire_String(raw.query),
+      api2wire_opt_box_autoadd_usize(raw.offset),
+      api2wire_opt_box_autoadd_usize(raw.limit),
+      api2wire_opt_StringList(raw.attributesToRetrieve),
+      api2wire_opt_StringList(raw.attributesToCrop),
+      api2wire_opt_box_autoadd_usize(raw.cropLength),
+      api2wire_opt_StringList(raw.attributesToHighlight),
+      api2wire_opt_box_autoadd_bool(raw.showMatchesPosition),
+      api2wire_opt_box_autoadd_bool(raw.showRankingScore),
+      api2wire_opt_box_autoadd_bool(raw.showRankingScoreDetails),
+      api2wire_opt_String(raw.filter),
+      api2wire_opt_StringList(raw.sort),
+      api2wire_opt_StringList(raw.facets),
+      api2wire_opt_String(raw.highlightPreTag),
+      api2wire_opt_String(raw.highlightPostTag),
+      api2wire_opt_String(raw.cropMarker),
+      api2wire_opt_box_autoadd_matching_strategy(raw.matchingStrategy),
+      api2wire_opt_StringList(raw.attributesToSearchOn)
+    ];
   }
 
   @protected
@@ -196,6 +255,7 @@ class EmbeddedMilliPlatform extends FlutterRustBridgeBase<EmbeddedMilliWire>
   Uint8List api2wire_uint_8_list(Uint8List raw) {
     return raw;
   }
+
 // Section: finalizer
 }
 
@@ -232,6 +292,9 @@ class EmbeddedMilliWasmModule implements WasmModule {
 
   external dynamic /* void */ wire_get_all_documents(
       NativePortType port_, String instance_dir, String index_name);
+
+  external dynamic /* void */ wire_fancy_search(NativePortType port_,
+      String instance_dir, String index_name, List<dynamic> q);
 
   external dynamic /* void */ wire_search_documents(
       NativePortType port_,
@@ -294,6 +357,10 @@ class EmbeddedMilliWire
   void wire_get_all_documents(
           NativePortType port_, String instance_dir, String index_name) =>
       wasmModule.wire_get_all_documents(port_, instance_dir, index_name);
+
+  void wire_fancy_search(NativePortType port_, String instance_dir,
+          String index_name, List<dynamic> q) =>
+      wasmModule.wire_fancy_search(port_, instance_dir, index_name, q);
 
   void wire_search_documents(
           NativePortType port_,

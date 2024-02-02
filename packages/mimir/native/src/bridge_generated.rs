@@ -176,6 +176,26 @@ fn wire_get_all_documents_impl(
         },
     )
 }
+fn wire_fancy_search_impl(
+    port_: MessagePort,
+    instance_dir: impl Wire2Api<String> + UnwindSafe,
+    index_name: impl Wire2Api<String> + UnwindSafe,
+    q: impl Wire2Api<Query> + UnwindSafe,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap::<_, _, _, Vec<String>, _>(
+        WrapInfo {
+            debug_name: "fancy_search",
+            port: Some(port_),
+            mode: FfiCallMode::Normal,
+        },
+        move || {
+            let api_instance_dir = instance_dir.wire2api();
+            let api_index_name = index_name.wire2api();
+            let api_q = q.wire2api();
+            move |task_callback| fancy_search(api_instance_dir, api_index_name, api_q)
+        },
+    )
+}
 fn wire_search_documents_impl(
     port_: MessagePort,
     instance_dir: impl Wire2Api<String> + UnwindSafe,
@@ -308,6 +328,16 @@ impl Wire2Api<i32> for i32 {
     }
 }
 
+impl Wire2Api<MatchingStrategy> for i32 {
+    fn wire2api(self) -> MatchingStrategy {
+        match self {
+            0 => MatchingStrategy::Last,
+            1 => MatchingStrategy::All,
+            _ => unreachable!("Invalid variant for MatchingStrategy: {}", self),
+        }
+    }
+}
+
 impl Wire2Api<TermsMatchingStrategy> for i32 {
     fn wire2api(self) -> TermsMatchingStrategy {
         match self {
@@ -328,6 +358,11 @@ impl Wire2Api<u8> for u8 {
     }
 }
 
+impl Wire2Api<usize> for usize {
+    fn wire2api(self) -> usize {
+        self
+    }
+}
 // Section: impl IntoDart
 
 impl support::IntoDart for MimirIndexSettings {
@@ -452,6 +487,16 @@ mod web {
     #[wasm_bindgen]
     pub fn wire_get_all_documents(port_: MessagePort, instance_dir: String, index_name: String) {
         wire_get_all_documents_impl(port_, instance_dir, index_name)
+    }
+
+    #[wasm_bindgen]
+    pub fn wire_fancy_search(
+        port_: MessagePort,
+        instance_dir: String,
+        index_name: String,
+        q: JsValue,
+    ) {
+        wire_fancy_search_impl(port_, instance_dir, index_name, q)
     }
 
     #[wasm_bindgen]
@@ -601,6 +646,7 @@ mod web {
                 .collect()
         }
     }
+
     impl Wire2Api<MimirIndexSettings> for JsValue {
         fn wire2api(self) -> MimirIndexSettings {
             let self_ = self.dyn_into::<JsArray>().unwrap();
@@ -637,6 +683,37 @@ mod web {
         }
     }
 
+    impl Wire2Api<Query> for JsValue {
+        fn wire2api(self) -> Query {
+            let self_ = self.dyn_into::<JsArray>().unwrap();
+            assert_eq!(
+                self_.length(),
+                18,
+                "Expected 18 elements, got {}",
+                self_.length()
+            );
+            Query {
+                query: self_.get(0).wire2api(),
+                offset: self_.get(1).wire2api(),
+                limit: self_.get(2).wire2api(),
+                attributes_to_retrieve: self_.get(3).wire2api(),
+                attributes_to_crop: self_.get(4).wire2api(),
+                crop_length: self_.get(5).wire2api(),
+                attributes_to_highlight: self_.get(6).wire2api(),
+                show_matches_position: self_.get(7).wire2api(),
+                show_ranking_score: self_.get(8).wire2api(),
+                show_ranking_score_details: self_.get(9).wire2api(),
+                filter: self_.get(10).wire2api(),
+                sort: self_.get(11).wire2api(),
+                facets: self_.get(12).wire2api(),
+                highlight_pre_tag: self_.get(13).wire2api(),
+                highlight_post_tag: self_.get(14).wire2api(),
+                crop_marker: self_.get(15).wire2api(),
+                matching_strategy: self_.get(16).wire2api(),
+                attributes_to_search_on: self_.get(17).wire2api(),
+            }
+        }
+    }
     impl Wire2Api<SortBy> for JsValue {
         fn wire2api(self) -> SortBy {
             let self_ = self.unchecked_into::<JsArray>();
@@ -668,6 +745,7 @@ mod web {
             self.into_vec()
         }
     }
+
     // Section: impl Wire2Api for JsValue
 
     impl<T> Wire2Api<Option<T>> for JsValue
@@ -698,6 +776,11 @@ mod web {
             self.unchecked_into_f64() as _
         }
     }
+    impl Wire2Api<MatchingStrategy> for JsValue {
+        fn wire2api(self) -> MatchingStrategy {
+            (self.unchecked_into_f64() as i32).wire2api()
+        }
+    }
     impl Wire2Api<TermsMatchingStrategy> for JsValue {
         fn wire2api(self) -> TermsMatchingStrategy {
             (self.unchecked_into_f64() as i32).wire2api()
@@ -716,6 +799,11 @@ mod web {
     impl Wire2Api<Vec<u8>> for JsValue {
         fn wire2api(self) -> Vec<u8> {
             self.unchecked_into::<js_sys::Uint8Array>().to_vec().into()
+        }
+    }
+    impl Wire2Api<usize> for JsValue {
+        fn wire2api(self) -> usize {
+            self.unchecked_into_f64() as _
         }
     }
 }
@@ -804,6 +892,16 @@ mod io {
     }
 
     #[no_mangle]
+    pub extern "C" fn wire_fancy_search(
+        port_: i64,
+        instance_dir: *mut wire_uint_8_list,
+        index_name: *mut wire_uint_8_list,
+        q: *mut wire_Query,
+    ) {
+        wire_fancy_search_impl(port_, instance_dir, index_name, q)
+    }
+
+    #[no_mangle]
     pub extern "C" fn wire_search_documents(
         port_: i64,
         instance_dir: *mut wire_uint_8_list,
@@ -868,13 +966,28 @@ mod io {
     }
 
     #[no_mangle]
+    pub extern "C" fn new_box_autoadd_bool_0(value: bool) -> *mut bool {
+        support::new_leak_box_ptr(value)
+    }
+
+    #[no_mangle]
     pub extern "C" fn new_box_autoadd_filter_0() -> *mut wire_Filter {
         support::new_leak_box_ptr(wire_Filter::new_with_null_ptr())
     }
 
     #[no_mangle]
+    pub extern "C" fn new_box_autoadd_matching_strategy_0(value: i32) -> *mut i32 {
+        support::new_leak_box_ptr(value)
+    }
+
+    #[no_mangle]
     pub extern "C" fn new_box_autoadd_mimir_index_settings_0() -> *mut wire_MimirIndexSettings {
         support::new_leak_box_ptr(wire_MimirIndexSettings::new_with_null_ptr())
+    }
+
+    #[no_mangle]
+    pub extern "C" fn new_box_autoadd_query_0() -> *mut wire_Query {
+        support::new_leak_box_ptr(wire_Query::new_with_null_ptr())
     }
 
     #[no_mangle]
@@ -884,6 +997,11 @@ mod io {
 
     #[no_mangle]
     pub extern "C" fn new_box_autoadd_u32_0(value: u32) -> *mut u32 {
+        support::new_leak_box_ptr(value)
+    }
+
+    #[no_mangle]
+    pub extern "C" fn new_box_autoadd_usize_0(value: usize) -> *mut usize {
         support::new_leak_box_ptr(value)
     }
 
@@ -948,16 +1066,33 @@ mod io {
         }
     }
 
+    impl Wire2Api<bool> for *mut bool {
+        fn wire2api(self) -> bool {
+            unsafe { *support::box_from_leak_ptr(self) }
+        }
+    }
     impl Wire2Api<Filter> for *mut wire_Filter {
         fn wire2api(self) -> Filter {
             let wrap = unsafe { support::box_from_leak_ptr(self) };
             Wire2Api::<Filter>::wire2api(*wrap).into()
         }
     }
+    impl Wire2Api<MatchingStrategy> for *mut i32 {
+        fn wire2api(self) -> MatchingStrategy {
+            let wrap = unsafe { support::box_from_leak_ptr(self) };
+            Wire2Api::<MatchingStrategy>::wire2api(*wrap).into()
+        }
+    }
     impl Wire2Api<MimirIndexSettings> for *mut wire_MimirIndexSettings {
         fn wire2api(self) -> MimirIndexSettings {
             let wrap = unsafe { support::box_from_leak_ptr(self) };
             Wire2Api::<MimirIndexSettings>::wire2api(*wrap).into()
+        }
+    }
+    impl Wire2Api<Query> for *mut wire_Query {
+        fn wire2api(self) -> Query {
+            let wrap = unsafe { support::box_from_leak_ptr(self) };
+            Wire2Api::<Query>::wire2api(*wrap).into()
         }
     }
     impl Wire2Api<TermsMatchingStrategy> for *mut i32 {
@@ -968,6 +1103,11 @@ mod io {
     }
     impl Wire2Api<u32> for *mut u32 {
         fn wire2api(self) -> u32 {
+            unsafe { *support::box_from_leak_ptr(self) }
+        }
+    }
+    impl Wire2Api<usize> for *mut usize {
+        fn wire2api(self) -> usize {
             unsafe { *support::box_from_leak_ptr(self) }
         }
     }
@@ -1113,6 +1253,7 @@ mod io {
             vec.into_iter().map(Wire2Api::wire2api).collect()
         }
     }
+
     impl Wire2Api<MimirIndexSettings> for wire_MimirIndexSettings {
         fn wire2api(self) -> MimirIndexSettings {
             MimirIndexSettings {
@@ -1132,6 +1273,30 @@ mod io {
         }
     }
 
+    impl Wire2Api<Query> for wire_Query {
+        fn wire2api(self) -> Query {
+            Query {
+                query: self.query.wire2api(),
+                offset: self.offset.wire2api(),
+                limit: self.limit.wire2api(),
+                attributes_to_retrieve: self.attributes_to_retrieve.wire2api(),
+                attributes_to_crop: self.attributes_to_crop.wire2api(),
+                crop_length: self.crop_length.wire2api(),
+                attributes_to_highlight: self.attributes_to_highlight.wire2api(),
+                show_matches_position: self.show_matches_position.wire2api(),
+                show_ranking_score: self.show_ranking_score.wire2api(),
+                show_ranking_score_details: self.show_ranking_score_details.wire2api(),
+                filter: self.filter.wire2api(),
+                sort: self.sort.wire2api(),
+                facets: self.facets.wire2api(),
+                highlight_pre_tag: self.highlight_pre_tag.wire2api(),
+                highlight_post_tag: self.highlight_post_tag.wire2api(),
+                crop_marker: self.crop_marker.wire2api(),
+                matching_strategy: self.matching_strategy.wire2api(),
+                attributes_to_search_on: self.attributes_to_search_on.wire2api(),
+            }
+        }
+    }
     impl Wire2Api<SortBy> for wire_SortBy {
         fn wire2api(self) -> SortBy {
             match self.tag {
@@ -1166,6 +1331,7 @@ mod io {
             }
         }
     }
+
     // Section: wire structs
 
     #[repr(C)]
@@ -1211,6 +1377,29 @@ mod io {
         min_word_size_for_two_typos: u8,
         disallow_typos_on_words: *mut wire_StringList,
         disallow_typos_on_fields: *mut wire_StringList,
+    }
+
+    #[repr(C)]
+    #[derive(Clone)]
+    pub struct wire_Query {
+        query: *mut wire_uint_8_list,
+        offset: *mut usize,
+        limit: *mut usize,
+        attributes_to_retrieve: *mut wire_StringList,
+        attributes_to_crop: *mut wire_StringList,
+        crop_length: *mut usize,
+        attributes_to_highlight: *mut wire_StringList,
+        show_matches_position: *mut bool,
+        show_ranking_score: *mut bool,
+        show_ranking_score_details: *mut bool,
+        filter: *mut wire_uint_8_list,
+        sort: *mut wire_StringList,
+        facets: *mut wire_StringList,
+        highlight_pre_tag: *mut wire_uint_8_list,
+        highlight_post_tag: *mut wire_uint_8_list,
+        crop_marker: *mut wire_uint_8_list,
+        matching_strategy: *mut i32,
+        attributes_to_search_on: *mut wire_StringList,
     }
 
     #[repr(C)]
@@ -1552,6 +1741,37 @@ mod io {
     }
 
     impl Default for wire_MimirIndexSettings {
+        fn default() -> Self {
+            Self::new_with_null_ptr()
+        }
+    }
+
+    impl NewWithNullPtr for wire_Query {
+        fn new_with_null_ptr() -> Self {
+            Self {
+                query: core::ptr::null_mut(),
+                offset: core::ptr::null_mut(),
+                limit: core::ptr::null_mut(),
+                attributes_to_retrieve: core::ptr::null_mut(),
+                attributes_to_crop: core::ptr::null_mut(),
+                crop_length: core::ptr::null_mut(),
+                attributes_to_highlight: core::ptr::null_mut(),
+                show_matches_position: core::ptr::null_mut(),
+                show_ranking_score: core::ptr::null_mut(),
+                show_ranking_score_details: core::ptr::null_mut(),
+                filter: core::ptr::null_mut(),
+                sort: core::ptr::null_mut(),
+                facets: core::ptr::null_mut(),
+                highlight_pre_tag: core::ptr::null_mut(),
+                highlight_post_tag: core::ptr::null_mut(),
+                crop_marker: core::ptr::null_mut(),
+                matching_strategy: core::ptr::null_mut(),
+                attributes_to_search_on: core::ptr::null_mut(),
+            }
+        }
+    }
+
+    impl Default for wire_Query {
         fn default() -> Self {
             Self::new_with_null_ptr()
         }

@@ -10,6 +10,9 @@ abstract class MimirIndex {
   /// The path-friendly name (id) of this index
   String get name;
 
+  /// Perform a more powerful search against the documents of this index.
+  Future<List<MimirDocument>> fancySearch(Query query);
+
   /// Perform a search against the documents of this index.
   ///
   /// Searches based on the provided [query], if not null.

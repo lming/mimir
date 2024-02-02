@@ -161,6 +161,17 @@ class MimirIndexImpl extends MimirIndex {
       milli.numberOfDocuments(instanceDir: instanceDir, indexName: name);
 
   @override
+  Future<List<MimirDocument>> fancySearch(Query query) async {
+    //try {
+    final jsonDocs = await milli.fancySearch(
+      instanceDir: instanceDir,
+      indexName: name,
+      q: query,
+    );
+    return jsonDocs.map((s) => json.decode(s)).cast<MimirDocument>().toList();
+  }
+
+  @override
   Future<List<MimirDocument>> search({
     String? query,
     int? resultsLimit,

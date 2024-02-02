@@ -19,6 +19,27 @@ typedef struct wire_StringList {
   int32_t len;
 } wire_StringList;
 
+typedef struct wire_Query {
+  struct wire_uint_8_list *query;
+  uintptr_t *offset;
+  uintptr_t *limit;
+  struct wire_StringList *attributes_to_retrieve;
+  struct wire_StringList *attributes_to_crop;
+  uintptr_t *crop_length;
+  struct wire_StringList *attributes_to_highlight;
+  bool *show_matches_position;
+  bool *show_ranking_score;
+  bool *show_ranking_score_details;
+  struct wire_uint_8_list *filter;
+  struct wire_StringList *sort;
+  struct wire_StringList *facets;
+  struct wire_uint_8_list *highlight_pre_tag;
+  struct wire_uint_8_list *highlight_post_tag;
+  struct wire_uint_8_list *crop_marker;
+  int32_t *matching_strategy;
+  struct wire_StringList *attributes_to_search_on;
+} wire_Query;
+
 typedef struct wire_SortBy_Asc {
   struct wire_uint_8_list *field0;
 } wire_SortBy_Asc;
@@ -207,6 +228,11 @@ void wire_get_all_documents(int64_t port_,
                             struct wire_uint_8_list *instance_dir,
                             struct wire_uint_8_list *index_name);
 
+void wire_fancy_search(int64_t port_,
+                       struct wire_uint_8_list *instance_dir,
+                       struct wire_uint_8_list *index_name,
+                       struct wire_Query *q);
+
 void wire_search_documents(int64_t port_,
                            struct wire_uint_8_list *instance_dir,
                            struct wire_uint_8_list *index_name,
@@ -232,13 +258,21 @@ void wire_set_settings(int64_t port_,
 
 struct wire_StringList *new_StringList_0(int32_t len);
 
+bool *new_box_autoadd_bool_0(bool value);
+
 struct wire_Filter *new_box_autoadd_filter_0(void);
 
+int32_t *new_box_autoadd_matching_strategy_0(int32_t value);
+
 struct wire_MimirIndexSettings *new_box_autoadd_mimir_index_settings_0(void);
+
+struct wire_Query *new_box_autoadd_query_0(void);
 
 int32_t *new_box_autoadd_terms_matching_strategy_0(int32_t value);
 
 uint32_t *new_box_autoadd_u32_0(uint32_t value);
+
+uintptr_t *new_box_autoadd_usize_0(uintptr_t value);
 
 struct wire_Filter *new_box_filter_0(void);
 
@@ -294,15 +328,20 @@ static int64_t dummy_method_to_enforce_bundling(void) {
     dummy_var ^= ((int64_t) (void*) wire_set_documents);
     dummy_var ^= ((int64_t) (void*) wire_get_document);
     dummy_var ^= ((int64_t) (void*) wire_get_all_documents);
+    dummy_var ^= ((int64_t) (void*) wire_fancy_search);
     dummy_var ^= ((int64_t) (void*) wire_search_documents);
     dummy_var ^= ((int64_t) (void*) wire_number_of_documents);
     dummy_var ^= ((int64_t) (void*) wire_get_settings);
     dummy_var ^= ((int64_t) (void*) wire_set_settings);
     dummy_var ^= ((int64_t) (void*) new_StringList_0);
+    dummy_var ^= ((int64_t) (void*) new_box_autoadd_bool_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_filter_0);
+    dummy_var ^= ((int64_t) (void*) new_box_autoadd_matching_strategy_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_mimir_index_settings_0);
+    dummy_var ^= ((int64_t) (void*) new_box_autoadd_query_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_terms_matching_strategy_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_u32_0);
+    dummy_var ^= ((int64_t) (void*) new_box_autoadd_usize_0);
     dummy_var ^= ((int64_t) (void*) new_box_filter_0);
     dummy_var ^= ((int64_t) (void*) new_list_filter_0);
     dummy_var ^= ((int64_t) (void*) new_list_sort_by_0);

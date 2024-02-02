@@ -5,7 +5,7 @@ use lazy_static::lazy_static;
 use milli_v1::heed;
 use parking_lot::RwLock;
 
-use crate::api::{Filter, MimirIndexSettings, SortBy, TermsMatchingStrategy};
+use crate::api::{Filter, MimirIndexSettings, Query, SortBy, TermsMatchingStrategy};
 
 // The available implementations of embedded milli
 mod v1;
@@ -54,6 +54,8 @@ pub(crate) trait EmbeddedMilli<Index> {
     fn get_document(index: &Index, document_id: String) -> Result<Option<Document>>;
 
     fn get_all_documents(index: &Index) -> Result<Vec<Document>>;
+
+    fn fancy_search(index: &Index, q: Query) -> Result<Vec<Document>>;
 
     fn search_documents(
         index: &Index,
@@ -303,6 +305,16 @@ pub(crate) fn get_document(
 pub(crate) fn get_all_documents(instance_dir: &str, index_name: &str) -> Result<Vec<Document>> {
     run_with_index_lock(instance_dir, index_name, |index_lock| {
         CurrEmbeddedMilli::get_all_documents(&index_lock.read())
+    })
+}
+
+pub(crate) fn fancy_search(
+    instance_dir: &str,
+    index_name: &str,
+    q: Query,
+) -> Result<Vec<Document>> {
+    run_with_index_lock(instance_dir, index_name, |index_lock| {
+        CurrEmbeddedMilli::fancy_search(&index_lock.read(), q)
     })
 }
 

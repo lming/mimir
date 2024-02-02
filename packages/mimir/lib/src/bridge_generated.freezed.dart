@@ -3605,6 +3605,553 @@ abstract class _MimirIndexSettings implements MimirIndexSettings {
 }
 
 /// @nodoc
+mixin _$Query {
+  String get query => throw _privateConstructorUsedError;
+  int? get offset => throw _privateConstructorUsedError;
+  int? get limit => throw _privateConstructorUsedError;
+  List<String>? get attributesToRetrieve => throw _privateConstructorUsedError;
+  List<String>? get attributesToCrop => throw _privateConstructorUsedError;
+  int? get cropLength => throw _privateConstructorUsedError;
+  List<String>? get attributesToHighlight => throw _privateConstructorUsedError;
+  bool? get showMatchesPosition => throw _privateConstructorUsedError;
+  bool? get showRankingScore => throw _privateConstructorUsedError;
+  bool? get showRankingScoreDetails => throw _privateConstructorUsedError;
+  String? get filter => throw _privateConstructorUsedError;
+  List<String>? get sort => throw _privateConstructorUsedError;
+  List<String>? get facets => throw _privateConstructorUsedError;
+  String? get highlightPreTag => throw _privateConstructorUsedError;
+  String? get highlightPostTag => throw _privateConstructorUsedError;
+  String? get cropMarker => throw _privateConstructorUsedError;
+  MatchingStrategy? get matchingStrategy => throw _privateConstructorUsedError;
+  List<String>? get attributesToSearchOn => throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $QueryCopyWith<Query> get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $QueryCopyWith<$Res> {
+  factory $QueryCopyWith(Query value, $Res Function(Query) then) =
+      _$QueryCopyWithImpl<$Res, Query>;
+  @useResult
+  $Res call(
+      {String query,
+      int? offset,
+      int? limit,
+      List<String>? attributesToRetrieve,
+      List<String>? attributesToCrop,
+      int? cropLength,
+      List<String>? attributesToHighlight,
+      bool? showMatchesPosition,
+      bool? showRankingScore,
+      bool? showRankingScoreDetails,
+      String? filter,
+      List<String>? sort,
+      List<String>? facets,
+      String? highlightPreTag,
+      String? highlightPostTag,
+      String? cropMarker,
+      MatchingStrategy? matchingStrategy,
+      List<String>? attributesToSearchOn});
+}
+
+/// @nodoc
+class _$QueryCopyWithImpl<$Res, $Val extends Query>
+    implements $QueryCopyWith<$Res> {
+  _$QueryCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? query = null,
+    Object? offset = freezed,
+    Object? limit = freezed,
+    Object? attributesToRetrieve = freezed,
+    Object? attributesToCrop = freezed,
+    Object? cropLength = freezed,
+    Object? attributesToHighlight = freezed,
+    Object? showMatchesPosition = freezed,
+    Object? showRankingScore = freezed,
+    Object? showRankingScoreDetails = freezed,
+    Object? filter = freezed,
+    Object? sort = freezed,
+    Object? facets = freezed,
+    Object? highlightPreTag = freezed,
+    Object? highlightPostTag = freezed,
+    Object? cropMarker = freezed,
+    Object? matchingStrategy = freezed,
+    Object? attributesToSearchOn = freezed,
+  }) {
+    return _then(_value.copyWith(
+      query: null == query
+          ? _value.query
+          : query // ignore: cast_nullable_to_non_nullable
+              as String,
+      offset: freezed == offset
+          ? _value.offset
+          : offset // ignore: cast_nullable_to_non_nullable
+              as int?,
+      limit: freezed == limit
+          ? _value.limit
+          : limit // ignore: cast_nullable_to_non_nullable
+              as int?,
+      attributesToRetrieve: freezed == attributesToRetrieve
+          ? _value.attributesToRetrieve
+          : attributesToRetrieve // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      attributesToCrop: freezed == attributesToCrop
+          ? _value.attributesToCrop
+          : attributesToCrop // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      cropLength: freezed == cropLength
+          ? _value.cropLength
+          : cropLength // ignore: cast_nullable_to_non_nullable
+              as int?,
+      attributesToHighlight: freezed == attributesToHighlight
+          ? _value.attributesToHighlight
+          : attributesToHighlight // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      showMatchesPosition: freezed == showMatchesPosition
+          ? _value.showMatchesPosition
+          : showMatchesPosition // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      showRankingScore: freezed == showRankingScore
+          ? _value.showRankingScore
+          : showRankingScore // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      showRankingScoreDetails: freezed == showRankingScoreDetails
+          ? _value.showRankingScoreDetails
+          : showRankingScoreDetails // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      filter: freezed == filter
+          ? _value.filter
+          : filter // ignore: cast_nullable_to_non_nullable
+              as String?,
+      sort: freezed == sort
+          ? _value.sort
+          : sort // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      facets: freezed == facets
+          ? _value.facets
+          : facets // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      highlightPreTag: freezed == highlightPreTag
+          ? _value.highlightPreTag
+          : highlightPreTag // ignore: cast_nullable_to_non_nullable
+              as String?,
+      highlightPostTag: freezed == highlightPostTag
+          ? _value.highlightPostTag
+          : highlightPostTag // ignore: cast_nullable_to_non_nullable
+              as String?,
+      cropMarker: freezed == cropMarker
+          ? _value.cropMarker
+          : cropMarker // ignore: cast_nullable_to_non_nullable
+              as String?,
+      matchingStrategy: freezed == matchingStrategy
+          ? _value.matchingStrategy
+          : matchingStrategy // ignore: cast_nullable_to_non_nullable
+              as MatchingStrategy?,
+      attributesToSearchOn: freezed == attributesToSearchOn
+          ? _value.attributesToSearchOn
+          : attributesToSearchOn // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$QueryImplCopyWith<$Res> implements $QueryCopyWith<$Res> {
+  factory _$$QueryImplCopyWith(
+          _$QueryImpl value, $Res Function(_$QueryImpl) then) =
+      __$$QueryImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String query,
+      int? offset,
+      int? limit,
+      List<String>? attributesToRetrieve,
+      List<String>? attributesToCrop,
+      int? cropLength,
+      List<String>? attributesToHighlight,
+      bool? showMatchesPosition,
+      bool? showRankingScore,
+      bool? showRankingScoreDetails,
+      String? filter,
+      List<String>? sort,
+      List<String>? facets,
+      String? highlightPreTag,
+      String? highlightPostTag,
+      String? cropMarker,
+      MatchingStrategy? matchingStrategy,
+      List<String>? attributesToSearchOn});
+}
+
+/// @nodoc
+class __$$QueryImplCopyWithImpl<$Res>
+    extends _$QueryCopyWithImpl<$Res, _$QueryImpl>
+    implements _$$QueryImplCopyWith<$Res> {
+  __$$QueryImplCopyWithImpl(
+      _$QueryImpl _value, $Res Function(_$QueryImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? query = null,
+    Object? offset = freezed,
+    Object? limit = freezed,
+    Object? attributesToRetrieve = freezed,
+    Object? attributesToCrop = freezed,
+    Object? cropLength = freezed,
+    Object? attributesToHighlight = freezed,
+    Object? showMatchesPosition = freezed,
+    Object? showRankingScore = freezed,
+    Object? showRankingScoreDetails = freezed,
+    Object? filter = freezed,
+    Object? sort = freezed,
+    Object? facets = freezed,
+    Object? highlightPreTag = freezed,
+    Object? highlightPostTag = freezed,
+    Object? cropMarker = freezed,
+    Object? matchingStrategy = freezed,
+    Object? attributesToSearchOn = freezed,
+  }) {
+    return _then(_$QueryImpl(
+      query: null == query
+          ? _value.query
+          : query // ignore: cast_nullable_to_non_nullable
+              as String,
+      offset: freezed == offset
+          ? _value.offset
+          : offset // ignore: cast_nullable_to_non_nullable
+              as int?,
+      limit: freezed == limit
+          ? _value.limit
+          : limit // ignore: cast_nullable_to_non_nullable
+              as int?,
+      attributesToRetrieve: freezed == attributesToRetrieve
+          ? _value._attributesToRetrieve
+          : attributesToRetrieve // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      attributesToCrop: freezed == attributesToCrop
+          ? _value._attributesToCrop
+          : attributesToCrop // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      cropLength: freezed == cropLength
+          ? _value.cropLength
+          : cropLength // ignore: cast_nullable_to_non_nullable
+              as int?,
+      attributesToHighlight: freezed == attributesToHighlight
+          ? _value._attributesToHighlight
+          : attributesToHighlight // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      showMatchesPosition: freezed == showMatchesPosition
+          ? _value.showMatchesPosition
+          : showMatchesPosition // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      showRankingScore: freezed == showRankingScore
+          ? _value.showRankingScore
+          : showRankingScore // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      showRankingScoreDetails: freezed == showRankingScoreDetails
+          ? _value.showRankingScoreDetails
+          : showRankingScoreDetails // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      filter: freezed == filter
+          ? _value.filter
+          : filter // ignore: cast_nullable_to_non_nullable
+              as String?,
+      sort: freezed == sort
+          ? _value._sort
+          : sort // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      facets: freezed == facets
+          ? _value._facets
+          : facets // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      highlightPreTag: freezed == highlightPreTag
+          ? _value.highlightPreTag
+          : highlightPreTag // ignore: cast_nullable_to_non_nullable
+              as String?,
+      highlightPostTag: freezed == highlightPostTag
+          ? _value.highlightPostTag
+          : highlightPostTag // ignore: cast_nullable_to_non_nullable
+              as String?,
+      cropMarker: freezed == cropMarker
+          ? _value.cropMarker
+          : cropMarker // ignore: cast_nullable_to_non_nullable
+              as String?,
+      matchingStrategy: freezed == matchingStrategy
+          ? _value.matchingStrategy
+          : matchingStrategy // ignore: cast_nullable_to_non_nullable
+              as MatchingStrategy?,
+      attributesToSearchOn: freezed == attributesToSearchOn
+          ? _value._attributesToSearchOn
+          : attributesToSearchOn // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$QueryImpl implements _Query {
+  const _$QueryImpl(
+      {required this.query,
+      this.offset,
+      this.limit,
+      final List<String>? attributesToRetrieve,
+      final List<String>? attributesToCrop,
+      this.cropLength,
+      final List<String>? attributesToHighlight,
+      this.showMatchesPosition,
+      this.showRankingScore,
+      this.showRankingScoreDetails,
+      this.filter,
+      final List<String>? sort,
+      final List<String>? facets,
+      this.highlightPreTag,
+      this.highlightPostTag,
+      this.cropMarker,
+      this.matchingStrategy,
+      final List<String>? attributesToSearchOn})
+      : _attributesToRetrieve = attributesToRetrieve,
+        _attributesToCrop = attributesToCrop,
+        _attributesToHighlight = attributesToHighlight,
+        _sort = sort,
+        _facets = facets,
+        _attributesToSearchOn = attributesToSearchOn;
+
+  @override
+  final String query;
+  @override
+  final int? offset;
+  @override
+  final int? limit;
+  final List<String>? _attributesToRetrieve;
+  @override
+  List<String>? get attributesToRetrieve {
+    final value = _attributesToRetrieve;
+    if (value == null) return null;
+    if (_attributesToRetrieve is EqualUnmodifiableListView)
+      return _attributesToRetrieve;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<String>? _attributesToCrop;
+  @override
+  List<String>? get attributesToCrop {
+    final value = _attributesToCrop;
+    if (value == null) return null;
+    if (_attributesToCrop is EqualUnmodifiableListView)
+      return _attributesToCrop;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  final int? cropLength;
+  final List<String>? _attributesToHighlight;
+  @override
+  List<String>? get attributesToHighlight {
+    final value = _attributesToHighlight;
+    if (value == null) return null;
+    if (_attributesToHighlight is EqualUnmodifiableListView)
+      return _attributesToHighlight;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  final bool? showMatchesPosition;
+  @override
+  final bool? showRankingScore;
+  @override
+  final bool? showRankingScoreDetails;
+  @override
+  final String? filter;
+  final List<String>? _sort;
+  @override
+  List<String>? get sort {
+    final value = _sort;
+    if (value == null) return null;
+    if (_sort is EqualUnmodifiableListView) return _sort;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<String>? _facets;
+  @override
+  List<String>? get facets {
+    final value = _facets;
+    if (value == null) return null;
+    if (_facets is EqualUnmodifiableListView) return _facets;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  final String? highlightPreTag;
+  @override
+  final String? highlightPostTag;
+  @override
+  final String? cropMarker;
+  @override
+  final MatchingStrategy? matchingStrategy;
+  final List<String>? _attributesToSearchOn;
+  @override
+  List<String>? get attributesToSearchOn {
+    final value = _attributesToSearchOn;
+    if (value == null) return null;
+    if (_attributesToSearchOn is EqualUnmodifiableListView)
+      return _attributesToSearchOn;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  String toString() {
+    return 'Query(query: $query, offset: $offset, limit: $limit, attributesToRetrieve: $attributesToRetrieve, attributesToCrop: $attributesToCrop, cropLength: $cropLength, attributesToHighlight: $attributesToHighlight, showMatchesPosition: $showMatchesPosition, showRankingScore: $showRankingScore, showRankingScoreDetails: $showRankingScoreDetails, filter: $filter, sort: $sort, facets: $facets, highlightPreTag: $highlightPreTag, highlightPostTag: $highlightPostTag, cropMarker: $cropMarker, matchingStrategy: $matchingStrategy, attributesToSearchOn: $attributesToSearchOn)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$QueryImpl &&
+            (identical(other.query, query) || other.query == query) &&
+            (identical(other.offset, offset) || other.offset == offset) &&
+            (identical(other.limit, limit) || other.limit == limit) &&
+            const DeepCollectionEquality()
+                .equals(other._attributesToRetrieve, _attributesToRetrieve) &&
+            const DeepCollectionEquality()
+                .equals(other._attributesToCrop, _attributesToCrop) &&
+            (identical(other.cropLength, cropLength) ||
+                other.cropLength == cropLength) &&
+            const DeepCollectionEquality()
+                .equals(other._attributesToHighlight, _attributesToHighlight) &&
+            (identical(other.showMatchesPosition, showMatchesPosition) ||
+                other.showMatchesPosition == showMatchesPosition) &&
+            (identical(other.showRankingScore, showRankingScore) ||
+                other.showRankingScore == showRankingScore) &&
+            (identical(
+                    other.showRankingScoreDetails, showRankingScoreDetails) ||
+                other.showRankingScoreDetails == showRankingScoreDetails) &&
+            (identical(other.filter, filter) || other.filter == filter) &&
+            const DeepCollectionEquality().equals(other._sort, _sort) &&
+            const DeepCollectionEquality().equals(other._facets, _facets) &&
+            (identical(other.highlightPreTag, highlightPreTag) ||
+                other.highlightPreTag == highlightPreTag) &&
+            (identical(other.highlightPostTag, highlightPostTag) ||
+                other.highlightPostTag == highlightPostTag) &&
+            (identical(other.cropMarker, cropMarker) ||
+                other.cropMarker == cropMarker) &&
+            (identical(other.matchingStrategy, matchingStrategy) ||
+                other.matchingStrategy == matchingStrategy) &&
+            const DeepCollectionEquality()
+                .equals(other._attributesToSearchOn, _attributesToSearchOn));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      query,
+      offset,
+      limit,
+      const DeepCollectionEquality().hash(_attributesToRetrieve),
+      const DeepCollectionEquality().hash(_attributesToCrop),
+      cropLength,
+      const DeepCollectionEquality().hash(_attributesToHighlight),
+      showMatchesPosition,
+      showRankingScore,
+      showRankingScoreDetails,
+      filter,
+      const DeepCollectionEquality().hash(_sort),
+      const DeepCollectionEquality().hash(_facets),
+      highlightPreTag,
+      highlightPostTag,
+      cropMarker,
+      matchingStrategy,
+      const DeepCollectionEquality().hash(_attributesToSearchOn));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$QueryImplCopyWith<_$QueryImpl> get copyWith =>
+      __$$QueryImplCopyWithImpl<_$QueryImpl>(this, _$identity);
+}
+
+abstract class _Query implements Query {
+  const factory _Query(
+      {required final String query,
+      final int? offset,
+      final int? limit,
+      final List<String>? attributesToRetrieve,
+      final List<String>? attributesToCrop,
+      final int? cropLength,
+      final List<String>? attributesToHighlight,
+      final bool? showMatchesPosition,
+      final bool? showRankingScore,
+      final bool? showRankingScoreDetails,
+      final String? filter,
+      final List<String>? sort,
+      final List<String>? facets,
+      final String? highlightPreTag,
+      final String? highlightPostTag,
+      final String? cropMarker,
+      final MatchingStrategy? matchingStrategy,
+      final List<String>? attributesToSearchOn}) = _$QueryImpl;
+
+  @override
+  String get query;
+  @override
+  int? get offset;
+  @override
+  int? get limit;
+  @override
+  List<String>? get attributesToRetrieve;
+  @override
+  List<String>? get attributesToCrop;
+  @override
+  int? get cropLength;
+  @override
+  List<String>? get attributesToHighlight;
+  @override
+  bool? get showMatchesPosition;
+  @override
+  bool? get showRankingScore;
+  @override
+  bool? get showRankingScoreDetails;
+  @override
+  String? get filter;
+  @override
+  List<String>? get sort;
+  @override
+  List<String>? get facets;
+  @override
+  String? get highlightPreTag;
+  @override
+  String? get highlightPostTag;
+  @override
+  String? get cropMarker;
+  @override
+  MatchingStrategy? get matchingStrategy;
+  @override
+  List<String>? get attributesToSearchOn;
+  @override
+  @JsonKey(ignore: true)
+  _$$QueryImplCopyWith<_$QueryImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
 mixin _$SortBy {
   String get field0 => throw _privateConstructorUsedError;
   @optionalTypeArgs
