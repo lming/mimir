@@ -1,38 +1,38 @@
 //use actix_web as aweb;
 //use aweb::error::{JsonPayloadError, QueryPayloadError};
 //use byte_unit::Byte;
-use meilisearch_types::document_formats::{DocumentFormatError, PayloadType};
+use meilisearch_types::document_formats::DocumentFormatError;
 use meilisearch_types::error::{Code, ErrorCode};
-use meilisearch_types::index_uid::{IndexUid, IndexUidFormatError};
+use meilisearch_types::index_uid::IndexUidFormatError;
 use serde_json::Value;
 //use tokio::task::JoinError;
 
 #[derive(Debug, thiserror::Error)]
 pub enum MeilisearchHttpError {
-    #[error("A Content-Type header is missing. Accepted values for the Content-Type header are: {}",
-            .0.iter().map(|s| format!("`{}`", s)).collect::<Vec<_>>().join(", "))]
-    MissingContentType(Vec<String>),
-    #[error("The Content-Type `{0}` does not support the use of a csv delimiter. The csv delimiter can only be used with the Content-Type `text/csv`.")]
-    CsvDelimiterWithWrongContentType(String),
-    #[error(
-        "The Content-Type `{0}` is invalid. Accepted values for the Content-Type header are: {}",
-        .1.iter().map(|s| format!("`{}`", s)).collect::<Vec<_>>().join(", ")
-    )]
-    InvalidContentType(String, Vec<String>),
-    #[error("Document `{0}` not found.")]
-    DocumentNotFound(String),
-    #[error("Sending an empty filter is forbidden.")]
-    EmptyFilter,
+    //#[error("A Content-Type header is missing. Accepted values for the Content-Type header are: {}",
+    //        .0.iter().map(|s| format!("`{}`", s)).collect::<Vec<_>>().join(", "))]
+    //MissingContentType(Vec<String>),
+    //#[error("The Content-Type `{0}` does not support the use of a csv delimiter. The csv delimiter can only be used with the Content-Type `text/csv`.")]
+    //CsvDelimiterWithWrongContentType(String),
+    //#[error(
+    //    "The Content-Type `{0}` is invalid. Accepted values for the Content-Type header are: {}",
+    //    .1.iter().map(|s| format!("`{}`", s)).collect::<Vec<_>>().join(", ")
+    //)]
+    //InvalidContentType(String, Vec<String>),
+    //#[error("Document `{0}` not found.")]
+    //DocumentNotFound(String),
+    //#[error("Sending an empty filter is forbidden.")]
+    //EmptyFilter,
     #[error("Invalid syntax for the filter parameter: `expected {}, found: {1}`.", .0.join(", "))]
     InvalidExpression(&'static [&'static str], Value),
-    #[error("A {0} payload is missing.")]
-    MissingPayload(PayloadType),
+    //#[error("A {0} payload is missing.")]
+    //MissingPayload(PayloadType),
     //#[error("The provided payload reached the size limit. The maximum accepted payload size is {}.",  Byte::from_bytes(*.0 as u64).get_appropriate_unit(true))]
     //PayloadTooLarge(usize),
-    #[error("Two indexes must be given for each swap. The list `[{}]` contains {} indexes.",
-        .0.iter().map(|uid| format!("\"{uid}\"")).collect::<Vec<_>>().join(", "), .0.len()
-    )]
-    SwapIndexPayloadWrongLength(Vec<IndexUid>),
+    //#[error("Two indexes must be given for each swap. The list `[{}]` contains {} indexes.",
+    //    .0.iter().map(|uid| format!("\"{uid}\"")).collect::<Vec<_>>().join(", "), .0.len()
+    //)]
+    //SwapIndexPayloadWrongLength(Vec<IndexUid>),
     #[error(transparent)]
     IndexUid(#[from] IndexUidFormatError),
     #[error(transparent)]
@@ -56,15 +56,15 @@ pub enum MeilisearchHttpError {
 impl ErrorCode for MeilisearchHttpError {
     fn error_code(&self) -> Code {
         match self {
-            MeilisearchHttpError::MissingContentType(_) => Code::MissingContentType,
-            MeilisearchHttpError::CsvDelimiterWithWrongContentType(_) => Code::InvalidContentType,
-            MeilisearchHttpError::MissingPayload(_) => Code::MissingPayload,
-            MeilisearchHttpError::InvalidContentType(_, _) => Code::InvalidContentType,
-            MeilisearchHttpError::DocumentNotFound(_) => Code::DocumentNotFound,
-            MeilisearchHttpError::EmptyFilter => Code::InvalidDocumentFilter,
+            //MeilisearchHttpError::MissingContentType(_) => Code::MissingContentType,
+            //MeilisearchHttpError::CsvDelimiterWithWrongContentType(_) => Code::InvalidContentType,
+            //MeilisearchHttpError::MissingPayload(_) => Code::MissingPayload,
+            //MeilisearchHttpError::InvalidContentType(_, _) => Code::InvalidContentType,
+            //MeilisearchHttpError::DocumentNotFound(_) => Code::DocumentNotFound,
+            //MeilisearchHttpError::EmptyFilter => Code::InvalidDocumentFilter,
             MeilisearchHttpError::InvalidExpression(_, _) => Code::InvalidSearchFilter,
             //MeilisearchHttpError::PayloadTooLarge(_) => Code::PayloadTooLarge,
-            MeilisearchHttpError::SwapIndexPayloadWrongLength(_) => Code::InvalidSwapIndexes,
+            //MeilisearchHttpError::SwapIndexPayloadWrongLength(_) => Code::InvalidSwapIndexes,
             MeilisearchHttpError::IndexUid(e) => e.error_code(),
             MeilisearchHttpError::SerdeJson(_) => Code::Internal,
             MeilisearchHttpError::HeedError(_) => Code::Internal,
@@ -90,21 +90,21 @@ impl ErrorCode for MeilisearchHttpError {
 //    }
 //}
 
-#[derive(Debug, thiserror::Error)]
-pub enum PayloadError {
-    //#[error(transparent)]
-    //Payload(aweb::error::PayloadError),
-    //#[error(transparent)]
-    //Json(JsonPayloadError),
-    //#[error(transparent)]
-    //Query(QueryPayloadError),
-    #[error("The json payload provided is malformed. `{0}`.")]
-    MalformedPayload(serde_json::error::Error),
-    #[error("A json payload is missing.")]
-    MissingPayload,
-    #[error("Error while receiving the playload. `{0}`.")]
-    ReceivePayload(Box<dyn std::error::Error + Send + Sync + 'static>),
-}
+//#[derive(Debug, thiserror::Error)]
+//pub enum PayloadError {
+//#[error(transparent)]
+//Payload(aweb::error::PayloadError),
+//#[error(transparent)]
+//Json(JsonPayloadError),
+//#[error(transparent)]
+//Query(QueryPayloadError),
+// #[error("The json payload provided is malformed. `{0}`.")]
+// MalformedPayload(serde_json::error::Error),
+// #[error("A json payload is missing.")]
+// MissingPayload,
+// #[error("Error while receiving the playload. `{0}`.")]
+// ReceivePayload(Box<dyn std::error::Error + Send + Sync + 'static>),
+//}
 
 //impl ErrorCode for PayloadError {
 //    fn error_code(&self) -> Code {

@@ -10,7 +10,6 @@ use either::Either;
 //use meilisearch_auth::IndexSearchRules;
 use meilisearch_types::deserr::DeserrJsonError;
 use meilisearch_types::error::deserr_codes::*;
-use meilisearch_types::index_uid::IndexUid;
 use meilisearch_types::settings::DEFAULT_PAGINATION_MAX_TOTAL_HITS;
 use milli::tokenizer::TokenizerBuilder;
 use milli::{
@@ -75,100 +74,6 @@ pub struct SearchQuery {
 impl SearchQuery {
     pub fn is_finite_pagination(&self) -> bool {
         self.page.or(self.hits_per_page).is_some()
-    }
-}
-
-/// A `SearchQuery` + an index UID.
-// This struct contains the fields of `SearchQuery` inline.
-// This is because neither deserr nor serde support `flatten` when using `deny_unknown_fields.
-// The `From<SearchQueryWithIndex>` implementation ensures both structs remain up to date.
-#[derive(Debug, Clone, PartialEq, Eq, Deserr)]
-#[deserr(error = DeserrJsonError, rename_all = camelCase, deny_unknown_fields)]
-pub struct SearchQueryWithIndex {
-    #[deserr(error = DeserrJsonError<InvalidIndexUid>, missing_field_error = DeserrJsonError::missing_index_uid)]
-    pub index_uid: IndexUid,
-    #[deserr(default, error = DeserrJsonError<InvalidSearchQ>)]
-    pub q: Option<String>,
-    #[deserr(default = DEFAULT_SEARCH_OFFSET(), error = DeserrJsonError<InvalidSearchOffset>)]
-    pub offset: usize,
-    #[deserr(default = DEFAULT_SEARCH_LIMIT(), error = DeserrJsonError<InvalidSearchLimit>)]
-    pub limit: usize,
-    #[deserr(default, error = DeserrJsonError<InvalidSearchPage>)]
-    pub page: Option<usize>,
-    #[deserr(default, error = DeserrJsonError<InvalidSearchHitsPerPage>)]
-    pub hits_per_page: Option<usize>,
-    #[deserr(default, error = DeserrJsonError<InvalidSearchAttributesToRetrieve>)]
-    pub attributes_to_retrieve: Option<BTreeSet<String>>,
-    #[deserr(default, error = DeserrJsonError<InvalidSearchAttributesToCrop>)]
-    pub attributes_to_crop: Option<Vec<String>>,
-    #[deserr(default, error = DeserrJsonError<InvalidSearchCropLength>, default = DEFAULT_CROP_LENGTH())]
-    pub crop_length: usize,
-    #[deserr(default, error = DeserrJsonError<InvalidSearchAttributesToHighlight>)]
-    pub attributes_to_highlight: Option<HashSet<String>>,
-    #[deserr(default, error = DeserrJsonError<InvalidSearchShowMatchesPosition>, default)]
-    pub show_matches_position: bool,
-    #[deserr(default, error = DeserrJsonError<InvalidSearchFilter>)]
-    pub filter: Option<Value>,
-    #[deserr(default, error = DeserrJsonError<InvalidSearchSort>)]
-    pub sort: Option<Vec<String>>,
-    #[deserr(default, error = DeserrJsonError<InvalidSearchFacets>)]
-    pub facets: Option<Vec<String>>,
-    #[deserr(default, error = DeserrJsonError<InvalidSearchHighlightPreTag>, default = DEFAULT_HIGHLIGHT_PRE_TAG())]
-    pub highlight_pre_tag: String,
-    #[deserr(default, error = DeserrJsonError<InvalidSearchHighlightPostTag>, default = DEFAULT_HIGHLIGHT_POST_TAG())]
-    pub highlight_post_tag: String,
-    #[deserr(default, error = DeserrJsonError<InvalidSearchCropMarker>, default = DEFAULT_CROP_MARKER())]
-    pub crop_marker: String,
-    //#[deserr(default, error = DeserrJsonError<InvalidSearchMatchingStrategy>, default)]
-    //pub matching_strategy: TermsMatchingStrategy,
-}
-
-impl SearchQueryWithIndex {
-    pub fn into_index_query(self) -> (IndexUid, SearchQuery) {
-        let SearchQueryWithIndex {
-            index_uid,
-            q,
-            offset,
-            limit,
-            page,
-            hits_per_page,
-            attributes_to_retrieve,
-            attributes_to_crop,
-            crop_length,
-            attributes_to_highlight,
-            show_matches_position,
-            filter,
-            sort,
-            facets,
-            highlight_pre_tag,
-            highlight_post_tag,
-            crop_marker,
-            //matching_strategy,
-        } = self;
-        (
-            index_uid,
-            SearchQuery {
-                q,
-                offset,
-                limit,
-                page,
-                hits_per_page,
-                attributes_to_retrieve,
-                attributes_to_crop,
-                crop_length,
-                attributes_to_highlight,
-                show_matches_position,
-                filter,
-                sort,
-                facets,
-                highlight_pre_tag,
-                highlight_post_tag,
-                crop_marker,
-                //matching_strategy,
-                // do not use ..Default::default() here,
-                // rather add any missing field from `SearchQuery` to `SearchQueryWithIndex`
-            },
-        )
     }
 }
 
