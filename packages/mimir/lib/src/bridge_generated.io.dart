@@ -44,13 +44,6 @@ class EmbeddedMilliPlatform extends FlutterRustBridgeBase<EmbeddedMilliWire> {
   }
 
   @protected
-  ffi.Pointer<ffi.Int32> api2wire_box_autoadd_matching_strategy(
-      MatchingStrategy raw) {
-    return inner
-        .new_box_autoadd_matching_strategy_0(api2wire_matching_strategy(raw));
-  }
-
-  @protected
   ffi.Pointer<wire_MimirIndexSettings>
       api2wire_box_autoadd_mimir_index_settings(MimirIndexSettings raw) {
     final ptr = inner.new_box_autoadd_mimir_index_settings_0();
@@ -134,14 +127,6 @@ class EmbeddedMilliPlatform extends FlutterRustBridgeBase<EmbeddedMilliWire> {
   @protected
   ffi.Pointer<wire_Filter> api2wire_opt_box_autoadd_filter(Filter? raw) {
     return raw == null ? ffi.nullptr : api2wire_box_autoadd_filter(raw);
-  }
-
-  @protected
-  ffi.Pointer<ffi.Int32> api2wire_opt_box_autoadd_matching_strategy(
-      MatchingStrategy? raw) {
-    return raw == null
-        ? ffi.nullptr
-        : api2wire_box_autoadd_matching_strategy(raw);
   }
 
   @protected
@@ -362,7 +347,8 @@ class EmbeddedMilliPlatform extends FlutterRustBridgeBase<EmbeddedMilliWire> {
     wireObj.highlight_post_tag = api2wire_opt_String(apiObj.highlightPostTag);
     wireObj.crop_marker = api2wire_opt_String(apiObj.cropMarker);
     wireObj.matching_strategy =
-        api2wire_opt_box_autoadd_matching_strategy(apiObj.matchingStrategy);
+        api2wire_opt_box_autoadd_terms_matching_strategy(
+            apiObj.matchingStrategy);
     wireObj.attributes_to_search_on =
         api2wire_opt_StringList(apiObj.attributesToSearchOn);
   }
@@ -849,21 +835,6 @@ class EmbeddedMilliWire implements FlutterRustBridgeWireBase {
           'new_box_autoadd_filter_0');
   late final _new_box_autoadd_filter_0 = _new_box_autoadd_filter_0Ptr
       .asFunction<ffi.Pointer<wire_Filter> Function()>();
-
-  ffi.Pointer<ffi.Int32> new_box_autoadd_matching_strategy_0(
-    int value,
-  ) {
-    return _new_box_autoadd_matching_strategy_0(
-      value,
-    );
-  }
-
-  late final _new_box_autoadd_matching_strategy_0Ptr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<ffi.Int32> Function(ffi.Int32)>>(
-          'new_box_autoadd_matching_strategy_0');
-  late final _new_box_autoadd_matching_strategy_0 =
-      _new_box_autoadd_matching_strategy_0Ptr
-          .asFunction<ffi.Pointer<ffi.Int32> Function(int)>();
 
   ffi.Pointer<wire_MimirIndexSettings>
       new_box_autoadd_mimir_index_settings_0() {

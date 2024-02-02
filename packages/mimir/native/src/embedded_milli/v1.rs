@@ -16,14 +16,12 @@ use milli::{
     heed, update, AscDesc, Criterion, Index, Member, Search, SearchResult,
 };
 
-use index_scheduler::RoFeatures;
-use meilisearch::search::SearchResult as ExtSearchResult;
-use meilisearch::search::{perform_search, SearchQuery};
-use meilisearch_types::features::RuntimeTogglableFeatures;
+//use index_scheduler::RoFeatures;
+use crate::search::SearchResult as ExtSearchResult;
+use crate::search::{perform_search, SearchQuery};
+//use meilisearch_types::features::RuntimeTogglableFeatures;
 
-use crate::api::{
-    Filter, MatchingStrategy, MimirIndexSettings, Query, SortBy, Synonyms, TermsMatchingStrategy,
-};
+use crate::api::{Filter, MimirIndexSettings, Query, SortBy, Synonyms, TermsMatchingStrategy};
 
 use super::{
     Document, Dump, MAP_EXP_BACKOFF_AMOUNT, MAP_SIZE_TRIES, MAX_OS_PAGE_SIZE, MAX_POSSIBLE_SIZE,
@@ -192,7 +190,7 @@ impl super::EmbeddedMilli<Index> for EmbeddedMilli {
 
         let query = SearchQuery {
             q: Some(q.query),
-            vector: None,
+            //vector: None,
             offset: q.offset.unwrap_or(0),
             limit: q.limit.unwrap_or(10000),
             page: None,
@@ -202,26 +200,26 @@ impl super::EmbeddedMilli<Index> for EmbeddedMilli {
             crop_length: q.crop_length.unwrap_or(10),
             attributes_to_highlight: attr_hl,
             show_matches_position: q.show_matches_position.unwrap_or(false),
-            show_ranking_score: q.show_ranking_score.unwrap_or(false),
-            show_ranking_score_details: q.show_ranking_score_details.unwrap_or(false),
+            //show_ranking_score: q.show_ranking_score.unwrap_or(false),
+            //show_ranking_score_details: q.show_ranking_score_details.unwrap_or(false),
             filter: filter,
             sort: q.sort,
             facets: q.facets,
             highlight_pre_tag: q.highlight_pre_tag.unwrap_or("<em>".to_string()),
             highlight_post_tag: q.highlight_post_tag.unwrap_or("</em>".to_string()),
             crop_marker: q.crop_marker.unwrap_or("...".to_string()),
-            matching_strategy: q.matching_strategy.unwrap_or(MatchingStrategy::Last).into(),
-            attributes_to_search_on: q.attributes_to_search_on,
+            //matching_strategy: TermsMatchingStrategy::Last, //q.matching_strategy.unwrap_or(default),
+            //attributes_to_search_on: q.attributes_to_search_on,
         };
-        let features = RoFeatures {
-            runtime: RuntimeTogglableFeatures {
-                score_details: false,
-                vector_store: false,
-                metrics: false,
-                export_puffin_reports: false,
-            },
-        };
-        let res = perform_search(index, query, features);
+        //let features = RoFeatures {
+        //    runtime: RuntimeTogglableFeatures {
+        //        score_details: false,
+        //        vector_store: false,
+        //        metrics: false,
+        //        export_puffin_reports: false,
+        //    },
+        //};
+        let res = perform_search(index, query);
         let search_result = res?;
         let ExtSearchResult { hits, .. } = search_result;
         let docs: Vec<Document> = hits
@@ -436,14 +434,14 @@ impl super::EmbeddedMilli<Index> for EmbeddedMilli {
     }
 }
 
-impl From<MatchingStrategy> for meilisearch::search::MatchingStrategy {
-    fn from(strat: MatchingStrategy) -> Self {
-        match strat {
-            MatchingStrategy::Last => meilisearch::search::MatchingStrategy::Last,
-            MatchingStrategy::All => meilisearch::search::MatchingStrategy::All,
-        }
-    }
-}
+// impl From<MatchingStrategy> for crate::search::MatchingStrategy {
+//     fn from(strat: MatchingStrategy) -> Self {
+//         match strat {
+//             MatchingStrategy::Last => crate::search::MatchingStrategy::Last,
+//             MatchingStrategy::All => crate::search::MatchingStrategy::All,
+//         }
+//     }
+// }
 
 impl From<TermsMatchingStrategy> for milli::TermsMatchingStrategy {
     fn from(strat: TermsMatchingStrategy) -> Self {

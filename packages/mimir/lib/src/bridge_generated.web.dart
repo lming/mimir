@@ -41,11 +41,6 @@ class EmbeddedMilliPlatform extends FlutterRustBridgeBase<EmbeddedMilliWire>
   }
 
   @protected
-  int api2wire_box_autoadd_matching_strategy(MatchingStrategy raw) {
-    return api2wire_matching_strategy(raw);
-  }
-
-  @protected
   List<dynamic> api2wire_box_autoadd_mimir_index_settings(
       MimirIndexSettings raw) {
     return api2wire_mimir_index_settings(raw);
@@ -183,11 +178,6 @@ class EmbeddedMilliPlatform extends FlutterRustBridgeBase<EmbeddedMilliWire>
   }
 
   @protected
-  int? api2wire_opt_box_autoadd_matching_strategy(MatchingStrategy? raw) {
-    return raw == null ? null : api2wire_box_autoadd_matching_strategy(raw);
-  }
-
-  @protected
   int? api2wire_opt_box_autoadd_terms_matching_strategy(
       TermsMatchingStrategy? raw) {
     return raw == null
@@ -229,7 +219,7 @@ class EmbeddedMilliPlatform extends FlutterRustBridgeBase<EmbeddedMilliWire>
       api2wire_opt_String(raw.highlightPreTag),
       api2wire_opt_String(raw.highlightPostTag),
       api2wire_opt_String(raw.cropMarker),
-      api2wire_opt_box_autoadd_matching_strategy(raw.matchingStrategy),
+      api2wire_opt_box_autoadd_terms_matching_strategy(raw.matchingStrategy),
       api2wire_opt_StringList(raw.attributesToSearchOn)
     ];
   }

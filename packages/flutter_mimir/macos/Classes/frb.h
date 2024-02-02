@@ -262,8 +262,6 @@ bool *new_box_autoadd_bool_0(bool value);
 
 struct wire_Filter *new_box_autoadd_filter_0(void);
 
-int32_t *new_box_autoadd_matching_strategy_0(int32_t value);
-
 struct wire_MimirIndexSettings *new_box_autoadd_mimir_index_settings_0(void);
 
 struct wire_Query *new_box_autoadd_query_0(void);
@@ -336,7 +334,6 @@ static int64_t dummy_method_to_enforce_bundling(void) {
     dummy_var ^= ((int64_t) (void*) new_StringList_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_bool_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_filter_0);
-    dummy_var ^= ((int64_t) (void*) new_box_autoadd_matching_strategy_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_mimir_index_settings_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_query_0);
     dummy_var ^= ((int64_t) (void*) new_box_autoadd_terms_matching_strategy_0);

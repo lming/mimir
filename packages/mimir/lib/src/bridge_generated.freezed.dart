@@ -3622,7 +3622,8 @@ mixin _$Query {
   String? get highlightPreTag => throw _privateConstructorUsedError;
   String? get highlightPostTag => throw _privateConstructorUsedError;
   String? get cropMarker => throw _privateConstructorUsedError;
-  MatchingStrategy? get matchingStrategy => throw _privateConstructorUsedError;
+  TermsMatchingStrategy? get matchingStrategy =>
+      throw _privateConstructorUsedError;
   List<String>? get attributesToSearchOn => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -3651,7 +3652,7 @@ abstract class $QueryCopyWith<$Res> {
       String? highlightPreTag,
       String? highlightPostTag,
       String? cropMarker,
-      MatchingStrategy? matchingStrategy,
+      TermsMatchingStrategy? matchingStrategy,
       List<String>? attributesToSearchOn});
 }
 
@@ -3755,7 +3756,7 @@ class _$QueryCopyWithImpl<$Res, $Val extends Query>
       matchingStrategy: freezed == matchingStrategy
           ? _value.matchingStrategy
           : matchingStrategy // ignore: cast_nullable_to_non_nullable
-              as MatchingStrategy?,
+              as TermsMatchingStrategy?,
       attributesToSearchOn: freezed == attributesToSearchOn
           ? _value.attributesToSearchOn
           : attributesToSearchOn // ignore: cast_nullable_to_non_nullable
@@ -3788,7 +3789,7 @@ abstract class _$$QueryImplCopyWith<$Res> implements $QueryCopyWith<$Res> {
       String? highlightPreTag,
       String? highlightPostTag,
       String? cropMarker,
-      MatchingStrategy? matchingStrategy,
+      TermsMatchingStrategy? matchingStrategy,
       List<String>? attributesToSearchOn});
 }
 
@@ -3890,7 +3891,7 @@ class __$$QueryImplCopyWithImpl<$Res>
       matchingStrategy: freezed == matchingStrategy
           ? _value.matchingStrategy
           : matchingStrategy // ignore: cast_nullable_to_non_nullable
-              as MatchingStrategy?,
+              as TermsMatchingStrategy?,
       attributesToSearchOn: freezed == attributesToSearchOn
           ? _value._attributesToSearchOn
           : attributesToSearchOn // ignore: cast_nullable_to_non_nullable
@@ -4004,7 +4005,7 @@ class _$QueryImpl implements _Query {
   @override
   final String? cropMarker;
   @override
-  final MatchingStrategy? matchingStrategy;
+  final TermsMatchingStrategy? matchingStrategy;
   final List<String>? _attributesToSearchOn;
   @override
   List<String>? get attributesToSearchOn {
@@ -4106,7 +4107,7 @@ abstract class _Query implements Query {
       final String? highlightPreTag,
       final String? highlightPostTag,
       final String? cropMarker,
-      final MatchingStrategy? matchingStrategy,
+      final TermsMatchingStrategy? matchingStrategy,
       final List<String>? attributesToSearchOn}) = _$QueryImpl;
 
   @override
@@ -4142,7 +4143,7 @@ abstract class _Query implements Query {
   @override
   String? get cropMarker;
   @override
-  MatchingStrategy? get matchingStrategy;
+  TermsMatchingStrategy? get matchingStrategy;
   @override
   List<String>? get attributesToSearchOn;
   @override

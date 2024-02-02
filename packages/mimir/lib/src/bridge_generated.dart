@@ -211,14 +211,6 @@ class Filter with _$Filter {
   }) = Filter_IsEmpty;
 }
 
-enum MatchingStrategy {
-  /// Remove query words from last to first
-  Last,
-
-  /// All query words are mandatory
-  All,
-}
-
 /// The settings of a mimir index
 @freezed
 class MimirIndexSettings with _$MimirIndexSettings {
@@ -257,7 +249,7 @@ class Query with _$Query {
     String? highlightPreTag,
     String? highlightPostTag,
     String? cropMarker,
-    MatchingStrategy? matchingStrategy,
+    TermsMatchingStrategy? matchingStrategy,
     List<String>? attributesToSearchOn,
   }) = _Query;
 }
@@ -721,11 +713,6 @@ bool api2wire_bool(bool raw) {
 @protected
 int api2wire_i32(int raw) {
   return raw;
-}
-
-@protected
-int api2wire_matching_strategy(MatchingStrategy raw) {
-  return api2wire_i32(raw.index);
 }
 
 @protected

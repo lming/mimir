@@ -328,16 +328,6 @@ impl Wire2Api<i32> for i32 {
     }
 }
 
-impl Wire2Api<MatchingStrategy> for i32 {
-    fn wire2api(self) -> MatchingStrategy {
-        match self {
-            0 => MatchingStrategy::Last,
-            1 => MatchingStrategy::All,
-            _ => unreachable!("Invalid variant for MatchingStrategy: {}", self),
-        }
-    }
-}
-
 impl Wire2Api<TermsMatchingStrategy> for i32 {
     fn wire2api(self) -> TermsMatchingStrategy {
         match self {
@@ -646,7 +636,6 @@ mod web {
                 .collect()
         }
     }
-
     impl Wire2Api<MimirIndexSettings> for JsValue {
         fn wire2api(self) -> MimirIndexSettings {
             let self_ = self.dyn_into::<JsArray>().unwrap();
@@ -774,11 +763,6 @@ mod web {
     impl Wire2Api<i32> for JsValue {
         fn wire2api(self) -> i32 {
             self.unchecked_into_f64() as _
-        }
-    }
-    impl Wire2Api<MatchingStrategy> for JsValue {
-        fn wire2api(self) -> MatchingStrategy {
-            (self.unchecked_into_f64() as i32).wire2api()
         }
     }
     impl Wire2Api<TermsMatchingStrategy> for JsValue {
@@ -976,11 +960,6 @@ mod io {
     }
 
     #[no_mangle]
-    pub extern "C" fn new_box_autoadd_matching_strategy_0(value: i32) -> *mut i32 {
-        support::new_leak_box_ptr(value)
-    }
-
-    #[no_mangle]
     pub extern "C" fn new_box_autoadd_mimir_index_settings_0() -> *mut wire_MimirIndexSettings {
         support::new_leak_box_ptr(wire_MimirIndexSettings::new_with_null_ptr())
     }
@@ -1075,12 +1054,6 @@ mod io {
         fn wire2api(self) -> Filter {
             let wrap = unsafe { support::box_from_leak_ptr(self) };
             Wire2Api::<Filter>::wire2api(*wrap).into()
-        }
-    }
-    impl Wire2Api<MatchingStrategy> for *mut i32 {
-        fn wire2api(self) -> MatchingStrategy {
-            let wrap = unsafe { support::box_from_leak_ptr(self) };
-            Wire2Api::<MatchingStrategy>::wire2api(*wrap).into()
         }
     }
     impl Wire2Api<MimirIndexSettings> for *mut wire_MimirIndexSettings {
@@ -1253,7 +1226,6 @@ mod io {
             vec.into_iter().map(Wire2Api::wire2api).collect()
         }
     }
-
     impl Wire2Api<MimirIndexSettings> for wire_MimirIndexSettings {
         fn wire2api(self) -> MimirIndexSettings {
             MimirIndexSettings {

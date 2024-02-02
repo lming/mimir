@@ -83,13 +83,6 @@ pub struct MimirIndexSettings {
     pub disallow_typos_on_fields: Vec<String>,
 }
 
-pub enum MatchingStrategy {
-    /// Remove query words from last to first
-    Last,
-    /// All query words are mandatory
-    All,
-}
-
 #[frb(dart_metadata=("freezed"))]
 pub struct Query {
     pub query: String,
@@ -122,7 +115,7 @@ pub struct Query {
     pub crop_marker: Option<String>,
 
     // not tested
-    pub matching_strategy: Option<MatchingStrategy>,
+    pub matching_strategy: Option<TermsMatchingStrategy>,
     //pub matching_strategy: TermsMatchingStrategy,
     pub attributes_to_search_on: Option<Vec<String>>,
 }
