@@ -15,12 +15,16 @@ do
     cargo build -r --target=$TARGET --features posix-sem
 done
 
+
 # Create XCFramework zip
 FRAMEWORK="EmbeddedMilli.xcframework"
 LIBNAME=libembedded_milli.a
 mkdir mac-lipo ios-sim-lipo
 IOS_SIM_LIPO=ios-sim-lipo/$LIBNAME
 MAC_LIPO=mac-lipo/$LIBNAME
+
+rm -rf ios-sim-lipo mac-lipo $FRAMEWORK
+
 lipo -create -output $IOS_SIM_LIPO \
         ../target/aarch64-apple-ios-sim/release/$LIBNAME \
         ../target/x86_64-apple-ios/release/$LIBNAME
@@ -36,3 +40,4 @@ xcodebuild -create-xcframework \
 
 # Cleanup
 #rm -rf ios-sim-lipo mac-lipo $FRAMEWORK
+rm -rf ios-sim-lipo mac-lipo

@@ -8,6 +8,8 @@ url = "https://github.com/GregoryConrad/mimir/releases/download/#{release_tag_na
 local_zip_name = "#{release_tag_name}.zip"
 
 `
+echo "building rust packages and package into iOS/MacOS libraries"
+
 pushd ../../../
 cargo build -r
 bash scripts/build-apple.sh
