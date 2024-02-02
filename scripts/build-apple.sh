@@ -19,11 +19,10 @@ done
 # Create XCFramework zip
 FRAMEWORK="EmbeddedMilli.xcframework"
 LIBNAME=libembedded_milli.a
+rm -rf ios-sim-lipo mac-lipo $FRAMEWORK
 mkdir mac-lipo ios-sim-lipo
 IOS_SIM_LIPO=ios-sim-lipo/$LIBNAME
 MAC_LIPO=mac-lipo/$LIBNAME
-
-rm -rf ios-sim-lipo mac-lipo $FRAMEWORK
 
 lipo -create -output $IOS_SIM_LIPO \
         ../target/aarch64-apple-ios-sim/release/$LIBNAME \
